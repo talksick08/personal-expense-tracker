@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Database credentials
+db.php
+
+# Database/local files
+*.sql
+*.sql.gz
+
+# User uploads
+uploads/profile/*
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
