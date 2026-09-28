@@ -5,6 +5,8 @@
 
 # Database credentials
 db.php
+db_config.php
+!db_config.example.php
 
 # Database/local files
 *.sql
