@@ -1,0 +1,736 @@
+/* ==========================================================================
+   PERSONAL EXPENSE TRACKER - MASTER DARK THEME SYSTEM
+   Applies instantly across every page when dark mode is enabled.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL HTML & BODY STYLES
+   -------------------------------------------------------------------------- */
+html.dark-mode,
+html.dark-mode body,
+body.dark-mode {
+    background-color: #090e17 !important;
+    background: #090e17 !important;
+    color: #f1f5f9 !important;
+    color-scheme: dark;
+}
+
+/* Custom dark scrollbar */
+html.dark-mode::-webkit-scrollbar,
+body.dark-mode::-webkit-scrollbar,
+html.dark-mode *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+html.dark-mode::-webkit-scrollbar-track,
+body.dark-mode::-webkit-scrollbar-track,
+html.dark-mode *::-webkit-scrollbar-track {
+    background: #090e17;
+}
+html.dark-mode::-webkit-scrollbar-thumb,
+body.dark-mode::-webkit-scrollbar-thumb,
+html.dark-mode *::-webkit-scrollbar-thumb {
+    background: #1e2d42;
+    border-radius: 6px;
+    border: 2px solid #090e17;
+}
+html.dark-mode::-webkit-scrollbar-thumb:hover,
+body.dark-mode::-webkit-scrollbar-thumb:hover,
+html.dark-mode *::-webkit-scrollbar-thumb:hover {
+    background: #2b3f5c;
+}
+
+/* --------------------------------------------------------------------------
+   2. APP LAYOUT & MAIN CONTAINERS
+   -------------------------------------------------------------------------- */
+body.dark-mode .app-layout,
+body.dark-mode .main-content,
+body.dark-mode .transaction-main,
+body.dark-mode .settings-main,
+body.dark-mode .main,
+body.dark-mode .transaction-page,
+body.dark-mode .calendar-page,
+body.dark-mode .page-container {
+    background: #090e17 !important;
+    background-color: #090e17 !important;
+    color: #f1f5f9 !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. PAGE HEADERS & TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+body.dark-mode .page-header h1,
+body.dark-mode .transaction-header h1,
+body.dark-mode .settings-title h1,
+body.dark-mode .topbar h1,
+body.dark-mode .page-title h1,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .page-header p,
+body.dark-mode .transaction-header p,
+body.dark-mode .settings-title p,
+body.dark-mode .page-title p,
+body.dark-mode .card-subtitle,
+body.dark-mode .stat-subtitle,
+body.dark-mode .card-description,
+body.dark-mode .transaction-card-description,
+body.dark-mode .summary-note,
+body.dark-mode .page-kicker {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .date-badge,
+body.dark-mode .settings-badge,
+body.dark-mode .month-badge {
+    background: #101c2d !important;
+    border-color: #1e2d42 !important;
+    color: #94a3b8 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. CARDS & PANELS (Universal across all pages)
+   -------------------------------------------------------------------------- */
+body.dark-mode .card,
+body.dark-mode .stat-card,
+body.dark-mode .summary-card,
+body.dark-mode .account-card,
+body.dark-mode .budget-card,
+body.dark-mode .debt-card,
+body.dark-mode .medical-card,
+body.dark-mode .goal-card,
+body.dark-mode .transaction-card,
+body.dark-mode .calendar-card,
+body.dark-mode .kpi-card,
+body.dark-mode .settings-card,
+body.dark-mode .password-card,
+body.dark-mode .twofa-panel,
+body.dark-mode .faq-card,
+body.dark-mode .error-card,
+body.dark-mode .transaction-summary-card,
+body.dark-mode .balance-highlight {
+    background: #101c2d !important;
+    background-color: #101c2d !important;
+    border: 1px solid #1e2d42 !important;
+    border-color: #1e2d42 !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.dark-mode .card-header {
+    border-bottom-color: #1e2d42 !important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-header h2,
+body.dark-mode .card h2,
+body.dark-mode .transaction-card-title,
+body.dark-mode .category-name,
+body.dark-mode .account-name,
+body.dark-mode .loan-name,
+body.dark-mode .event-title,
+body.dark-mode .section-header h2,
+body.dark-mode .calendar-title {
+    color: #ffffff !important;
+}
+
+body.dark-mode .card-header p {
+    color: #8da2bb !important;
+}
+
+/* Sub-items, rows, and nested containers */
+body.dark-mode .account-item,
+body.dark-mode .event-item,
+body.dark-mode .transaction-row,
+body.dark-mode .transaction-item,
+body.dark-mode .setting-row,
+body.dark-mode .security-item,
+body.dark-mode .security-form,
+body.dark-mode .faq-item,
+body.dark-mode .next-event,
+body.dark-mode .completion-box {
+    background: #0b1424 !important;
+    border: 1px solid #1e2d42 !important;
+    border-color: #1e2d42 !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .account-item:hover,
+body.dark-mode .event-item:hover,
+body.dark-mode .transaction-row:hover,
+body.dark-mode .budget-card:hover,
+body.dark-mode .account-card:hover,
+body.dark-mode .stat-card:hover,
+body.dark-mode .kpi-card:hover {
+    background: #132238 !important;
+    border-color: #2b3f5c !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. METRIC & STAT VALUES
+   -------------------------------------------------------------------------- */
+body.dark-mode .stat-title,
+body.dark-mode .summary-title,
+body.dark-mode .summary-label,
+body.dark-mode .stat-label,
+body.dark-mode .kpi-title,
+body.dark-mode .next-event-label,
+body.dark-mode .dashboard-section-label {
+    color: #8da2bb !important;
+}
+
+body.dark-mode .stat-value,
+body.dark-mode .summary-value,
+body.dark-mode .account-balance,
+body.dark-mode .kpi-value,
+body.dark-mode .amount-main,
+body.dark-mode .category-amount,
+body.dark-mode .budget-numbers strong,
+body.dark-mode .stat-info h3 {
+    color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. TABLES & DATA LISTS
+   -------------------------------------------------------------------------- */
+body.dark-mode table,
+body.dark-mode .transaction-table,
+body.dark-mode .table-container,
+body.dark-mode .transaction-table-wrapper {
+    background: #101c2d !important;
+    border-color: #1e2d42 !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode thead,
+body.dark-mode thead th,
+body.dark-mode .transaction-table th,
+body.dark-mode th {
+    background: #0b1424 !important;
+    background-color: #0b1424 !important;
+    color: #8da2bb !important;
+    border-bottom: 1px solid #1e2d42 !important;
+    border-color: #1e2d42 !important;
+}
+
+body.dark-mode tbody td,
+body.dark-mode .transaction-table td,
+body.dark-mode td {
+    background: transparent !important;
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid #162436 !important;
+    border-color: #162436 !important;
+}
+
+body.dark-mode tbody tr:hover,
+body.dark-mode .transaction-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+body.dark-mode .transaction-category,
+body.dark-mode .account-name,
+body.dark-mode .loan-name {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .transaction-description,
+body.dark-mode .account-type,
+body.dark-mode .transaction-date {
+    color: #8993a4 !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. FORM INPUTS, SELECTS & TEXTAREAS
+   -------------------------------------------------------------------------- */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="date"],
+body.dark-mode input[type="datetime-local"],
+body.dark-mode input[type="search"],
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea,
+body.dark-mode .field input,
+body.dark-mode .field select,
+body.dark-mode .transaction-field input,
+body.dark-mode .transaction-field select,
+body.dark-mode .transaction-filter-field input,
+body.dark-mode .transaction-filter-field select,
+body.dark-mode .filter-input,
+body.dark-mode .filter-select,
+body.dark-mode .setting-select,
+body.dark-mode .small-btn {
+    background: #0c1526 !important;
+    background-color: #0c1526 !important;
+    border: 1px solid #26344a !important;
+    border-color: #26344a !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus,
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus,
+body.dark-mode .transaction-field input:focus,
+body.dark-mode .transaction-field select:focus,
+body.dark-mode .transaction-filter-field input:focus,
+body.dark-mode .transaction-filter-field select:focus,
+body.dark-mode .filter-input:focus,
+body.dark-mode .filter-select:focus {
+    border-color: #20b9f5 !important;
+    box-shadow: 0 0 0 3px rgba(32, 185, 245, 0.18) !important;
+    outline: none !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #64748b !important;
+}
+
+body.dark-mode label,
+body.dark-mode .form-group label,
+body.dark-mode .field label,
+body.dark-mode .transaction-field label,
+body.dark-mode .transaction-filter-field label,
+body.dark-mode .checkbox-group label {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode select option {
+    background-color: #0c1526 !important;
+    color: #f1f5f9 !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. BUTTONS & INTERACTIVE ELEMENTS
+   -------------------------------------------------------------------------- */
+body.dark-mode .btn-secondary,
+body.dark-mode .dashboard-link,
+body.dark-mode .back-btn,
+body.dark-mode .clear-filter,
+body.dark-mode .clear-filter-link,
+body.dark-mode .cancel-btn {
+    background: #132238 !important;
+    border: 1px solid #1e2d42 !important;
+    color: #94a3b8 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.dark-mode .btn-secondary:hover,
+body.dark-mode .dashboard-link:hover,
+body.dark-mode .back-btn:hover,
+body.dark-mode .clear-filter:hover,
+body.dark-mode .cancel-btn:hover {
+    background: #182a44 !important;
+    border-color: #334a6c !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .apply-filter-btn,
+body.dark-mode .filter-btn {
+    background: #16243a !important;
+    border: 1px solid #2b3f5c !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .apply-filter-btn:hover,
+body.dark-mode .filter-btn:hover {
+    background: #1f3350 !important;
+}
+
+/* Action buttons */
+body.dark-mode .transaction-edit,
+body.dark-mode .edit-btn,
+body.dark-mode .edit-account-btn {
+    background: rgba(32, 185, 245, 0.15) !important;
+    color: #38bdf8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+}
+
+body.dark-mode .transaction-edit:hover,
+body.dark-mode .edit-btn:hover,
+body.dark-mode .edit-account-btn:hover {
+    background: rgba(32, 185, 245, 0.25) !important;
+    color: #7dd3fc !important;
+}
+
+body.dark-mode .transaction-delete,
+body.dark-mode .delete-btn,
+body.dark-mode .delete-account-btn {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+body.dark-mode .transaction-delete:hover,
+body.dark-mode .delete-btn:hover,
+body.dark-mode .delete-account-btn:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #fca5a5 !important;
+}
+
+body.dark-mode .view-all {
+    color: #38bdf8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. COLOR-CODED BADGES & ACCENTS
+   -------------------------------------------------------------------------- */
+/* Income / Positive */
+body.dark-mode .transaction-type-income,
+body.dark-mode .transaction-amount-income,
+body.dark-mode .summary-income,
+body.dark-mode .summary-value.green,
+body.dark-mode .stat-green,
+body.dark-mode .green,
+body.dark-mode .remaining.good,
+body.dark-mode .status-badge.upcoming,
+body.dark-mode .verified {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .transaction-icon.income,
+body.dark-mode .income .stat-icon {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+}
+
+/* Expense / Negative */
+body.dark-mode .transaction-type-expense,
+body.dark-mode .transaction-amount-expense,
+body.dark-mode .summary-expense,
+body.dark-mode .summary-value.red,
+body.dark-mode .summary-card.outstanding .summary-value,
+body.dark-mode .stat-red,
+body.dark-mode .red,
+body.dark-mode .outstanding,
+body.dark-mode .event-amount,
+body.dark-mode .remaining.bad {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important;
+}
+
+body.dark-mode .transaction-icon.expense,
+body.dark-mode .expense .stat-icon {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important;
+}
+
+/* Primary / Cyan / Info */
+body.dark-mode .type-badge,
+body.dark-mode .period,
+body.dark-mode .stat-blue,
+body.dark-mode .blue,
+body.dark-mode .event-type,
+body.dark-mode .badge-role,
+body.dark-mode .badge-admin,
+body.dark-mode .summary-card.count .summary-value {
+    background: rgba(56, 189, 248, 0.15) !important;
+    color: #38bdf8 !important;
+    border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+body.dark-mode .balance .stat-icon,
+body.dark-mode .account-icon,
+body.dark-mode .summary-icon,
+body.dark-mode .kpi-icon {
+    background: rgba(56, 189, 248, 0.12) !important;
+    color: #38bdf8 !important;
+}
+
+/* Warning / Orange / EMI */
+body.dark-mode .stat-orange,
+body.dark-mode .orange,
+body.dark-mode .emi,
+body.dark-mode .summary-card.emi .summary-value,
+body.dark-mode .status-badge.today {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #fbbf24 !important;
+}
+
+/* Purple / Savings */
+body.dark-mode .savings .stat-icon,
+body.dark-mode .stat-purple {
+    background: rgba(168, 85, 247, 0.15) !important;
+    color: #c084fc !important;
+}
+
+/* Neutral badges */
+body.dark-mode .account-type,
+body.dark-mode .status-badge.past {
+    background: #18263a !important;
+    color: #94a3b8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. PROGRESS TRACKS & BARS
+   -------------------------------------------------------------------------- */
+body.dark-mode .progress-track,
+body.dark-mode .category-progress-bg {
+    background: #162436 !important;
+    background-color: #162436 !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. FINANCIAL CALENDAR
+   -------------------------------------------------------------------------- */
+body.dark-mode .calendar-navigation a {
+    background: #101c2d !important;
+    border-color: #1e2d42 !important;
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .calendar-navigation a:hover {
+    background: #16253a !important;
+    border-color: #20b9f5 !important;
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .calendar-month {
+    color: #ffffff !important;
+}
+
+body.dark-mode .calendar-weekday {
+    color: #64748b !important;
+}
+
+body.dark-mode .calendar-day {
+    background: #101c2d !important;
+    border-color: #1a273a !important;
+}
+
+body.dark-mode .calendar-day.empty-day {
+    background: #080d15 !important;
+    border-color: #121c29 !important;
+}
+
+body.dark-mode .calendar-day.today-day {
+    background: rgba(32, 185, 245, 0.08) !important;
+    border: 2px solid #20b9f5 !important;
+}
+
+body.dark-mode .day-number {
+    color: #8da2bb !important;
+}
+
+body.dark-mode .today-day .day-number {
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .calendar-event {
+    background: #162940 !important;
+    border-left-color: #38bdf8 !important;
+    color: #7dd3fc !important;
+}
+
+body.dark-mode .calendar-event:hover {
+    background: #1d3654 !important;
+}
+
+body.dark-mode .calendar-event.bill {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-left-color: #f87171 !important;
+    color: #fca5a5 !important;
+}
+
+body.dark-mode .calendar-event.payment {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-left-color: #34d399 !important;
+    color: #86efac !important;
+}
+
+body.dark-mode .calendar-event.income {
+    background: rgba(168, 85, 247, 0.15) !important;
+    border-left-color: #c084fc !important;
+    color: #d8b4fe !important;
+}
+
+body.dark-mode .calendar-event.emi {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border-left-color: #eab308 !important;
+    color: #fde047 !important;
+}
+
+/* --------------------------------------------------------------------------
+   12. MODALS & POPUPS
+   -------------------------------------------------------------------------- */
+body.dark-mode .modal-overlay {
+    background: rgba(0, 0, 0, 0.78) !important;
+}
+
+body.dark-mode .modal-box,
+body.dark-mode .modal-card,
+body.dark-mode .modal-content {
+    background: #101c2d !important;
+    border: 1px solid #1e2d42 !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    border-color: #1e2d42 !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. ALERTS & MESSAGES
+   -------------------------------------------------------------------------- */
+body.dark-mode .alert,
+body.dark-mode .transaction-alert,
+body.dark-mode .alert-success,
+body.dark-mode .transaction-alert.success,
+body.dark-mode .success {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .alert.error,
+body.dark-mode .transaction-alert.error,
+body.dark-mode .alert-error,
+body.dark-mode .danger-alert,
+body.dark-mode .error {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #f87171 !important;
+}
+
+/* --------------------------------------------------------------------------
+   14. EMPTY STATES
+   -------------------------------------------------------------------------- */
+body.dark-mode .empty-state,
+body.dark-mode .empty-events,
+body.dark-mode .transaction-empty {
+    color: #64748b !important;
+}
+
+body.dark-mode .empty-state h3,
+body.dark-mode .empty-events strong {
+    color: #cbd5e1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. SIDEBAR THEME SWITCHER WIDGET
+   -------------------------------------------------------------------------- */
+.sidebar-theme-panel {
+    margin: 14px 12px 10px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+.sidebar-theme-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.sidebar-theme-title {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #8da2bb;
+}
+
+.sidebar-theme-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    padding: 2px 7px;
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.sidebar-theme-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-theme-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 2px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    line-height: 1;
+}
+
+.sidebar-theme-btn .theme-icon {
+    font-size: 13px;
+}
+
+.sidebar-theme-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-theme-btn.active {
+    background: linear-gradient(135deg, #16b5f4, #168ce8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 3px 10px rgba(22, 140, 232, 0.35) !important;
+}
+
+/* --------------------------------------------------------------------------
+   16. EDIT TRANSACTION STANDALONE PAGE THEME SWITCHER
+   -------------------------------------------------------------------------- */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #dfe5ed;
+    background: #ffffff;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+body.dark-mode .edit-theme-toggle {
+    background: #132238 !important;
+    border-color: #1e2d42 !important;
+    color: #94a3b8 !important;
+}
+
+body.dark-mode .edit-theme-toggle:hover {
+    background: #182a44 !important;
+    color: #ffffff !important;
+}

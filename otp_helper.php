@@ -282,57 +282,99 @@ function verify_otp(
 | Send OTP Email
 |--------------------------------------------------------------------------
 |
-| IMPORTANT:
-| This uses PHP mail().
-| On MAMP/local development, email delivery may not work
-| until SMTP is configured.
+| Uses the central mailer engine (SMTP configured in admin settings,
+| with automatic fallback to PHP mail()). Supports both 3-argument
+| and 4-argument calls.
 |
 */
 
+require_once __DIR__ . "/mailer.php";
+
 function send_otp_email(
     string $email,
-    string $otp,
-    string $purpose
+    $param2,
+    $param3 = null,
+    $param4 = null
 ): bool {
+    global $conn;
+
+    if (!isset($conn) || !($conn instanceof mysqli)) {
+        require __DIR__ . "/db.php";
+    }
+
+    // Flexible arguments support:
+    // 4 args: ($email, $name, $otp, $purpose)
+    // 3 args: ($email, $otp, $purpose)
+    if ($param4 !== null) {
+        $recipient_name = trim((string) $param2) ?: 'User';
+        $otp = (string) $param3;
+        $purpose = (string) $param4;
+    } else {
+        $recipient_name = 'User';
+        $otp = (string) $param2;
+        $purpose = (string) ($param3 ?? 'verification');
+    }
 
     if ($purpose === "email_verification") {
+        $subject = "Verify your email - Personal Expense Tracker";
+        $badge = "Email Verification";
+        $title = "Verify Your Email Address";
+        $message_html = "Hello <strong>" . htmlspecialchars($recipient_name) . "</strong>,<br><br>" .
+            "Thank you for using Personal Expense Tracker. Please enter the verification code below to verify your email address.";
+        $footer_note = "This verification code will expire in <strong>5 minutes</strong> and can only be used once. If you did not request this, you can safely ignore this email.";
 
-        $subject =
-            "Verify your email - Personal Expense Tracker";
-
-        $message =
-            "Hello,\n\n" .
-            "Your email verification OTP is:\n\n" .
-            $otp . "\n\n" .
+        $text_message = "Hello {$recipient_name},\n\n" .
+            "Your email verification code is: {$otp}\n\n" .
             "This OTP will expire in 5 minutes.\n\n" .
-            "The OTP can only be used once.\n\n" .
-            "If you did not request this verification code, " .
-            "you can safely ignore this email.\n\n" .
             "Personal Expense Tracker";
+    } elseif ($purpose === "password_reset") {
+        $subject = "Reset your password - Personal Expense Tracker";
+        $badge = "Password Reset";
+        $title = "Password Reset Verification Code";
+        $message_html = "Hello <strong>" . htmlspecialchars($recipient_name) . "</strong>,<br><br>" .
+            "We received a request to reset the password for your Personal Expense Tracker account. Please enter the verification code below to set a new password.";
+        $footer_note = "This code will expire in <strong>10 minutes</strong>. If you did not make this request, you can safely ignore this email; your password will remain unchanged.";
 
+        $text_message = "Hello {$recipient_name},\n\n" .
+            "Your password reset verification code is: {$otp}\n\n" .
+            "This OTP will expire in 10 minutes.\n\n" .
+            "Personal Expense Tracker";
     } else {
+        $subject = "Your login verification code - Personal Expense Tracker";
+        $badge = "Security Verification";
+        $title = "Two-Factor Authentication Code";
+        $message_html = "Hello <strong>" . htmlspecialchars($recipient_name) . "</strong>,<br><br>" .
+            "A sign-in attempt was detected for your account. Please enter the 6-digit security code below to complete your login.";
+        $footer_note = "This security code will expire in <strong>5 minutes</strong> and can only be used once. If you did not attempt this login, please change your password immediately.";
 
-        $subject =
-            "Your login verification code - Personal Expense Tracker";
-
-        $message =
-            "Hello,\n\n" .
-            "Your two-factor authentication OTP is:\n\n" .
-            $otp . "\n\n" .
+        $text_message = "Hello {$recipient_name},\n\n" .
+            "Your two-factor authentication code is: {$otp}\n\n" .
             "This OTP will expire in 5 minutes.\n\n" .
-            "The OTP can only be used once.\n\n" .
             "Personal Expense Tracker";
     }
 
-    $headers =
-        "From: no-reply@localhost\r\n" .
-        "Reply-To: no-reply@localhost\r\n" .
-        "Content-Type: text/plain; charset=UTF-8\r\n";
+    $highlight_box = "
+        <div style=\"font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; margin-bottom: 8px; font-weight: 600;\">One-Time Security Code</div>
+        <div style=\"font-size: 34px; font-weight: 800; letter-spacing: 10px; color: #38bdf8; font-family: 'Courier New', Courier, monospace;\">" . htmlspecialchars($otp) . "</div>
+        <div style=\"font-size: 12px; color: #64748b; margin-top: 6px;\">Valid for 5 minutes</div>
+    ";
 
-    return mail(
+    $html_body = get_email_html_template(
+        $badge,
+        $title,
+        $message_html,
+        $highlight_box,
+        $footer_note
+    );
+
+    $result = send_app_mail(
+        $conn,
         $email,
         $subject,
-        $message,
-        $headers
+        $html_body,
+        $text_message,
+        $recipient_name
     );
+
+    return !empty($result['success']);
 }

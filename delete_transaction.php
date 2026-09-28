@@ -45,7 +45,7 @@ if (!$stmt->execute()) {
 $stmt->close();
 
 /* Go back to transactions */
-header("Location: transactions.php");
+header("Location: transactions.php?deleted=1");
 exit;
 
 ?>

@@ -209,6 +209,17 @@ $stmt->close();
 
     <title>Dashboard - Personal Expense Tracker</title>
 
+    <script>
+        (function() {
+            var theme = localStorage.getItem('expenseTrackerTheme') || 'system';
+            var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="dark_theme.css">
+
     <style>
 
         * {
@@ -940,11 +951,283 @@ $stmt->close();
             }
         }
 
+        /* =====================================================
+           HEADER ACTIONS & THEME SWITCHER
+        ===================================================== */
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .theme-switcher {
+            display: inline-flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 4px;
+            gap: 3px;
+            box-shadow: 0 4px 14px rgba(24, 39, 75, 0.05);
+            transition: all 0.25s ease;
+        }
+
+        .theme-btn {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            padding: 8px 14px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            line-height: 1;
+        }
+
+        .theme-btn:hover {
+            color: #172033;
+            background: #f1f5f9;
+        }
+
+        .theme-btn.active {
+            background: linear-gradient(135deg, #16b5f4, #168ce8);
+            color: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(22, 140, 232, 0.35);
+        }
+
+        .theme-icon {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        /* =====================================================
+           DARK THEME SYSTEM
+        ===================================================== */
+
+        body.dark-mode {
+            background: #090e17;
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .page-header h1 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .page-header p {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .date-badge {
+            background: #101c2d;
+            border-color: #1e2d42;
+            color: #94a3b8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        body.dark-mode .theme-switcher {
+            background: #101c2d;
+            border-color: #1e2d42;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .theme-btn {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .theme-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-mode .theme-btn.active {
+            background: linear-gradient(135deg, #16b5f4, #168ce8);
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .stat-card {
+            background: #101c2d;
+            border-color: #1e2d42;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        body.dark-mode .stat-title {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .stat-value {
+            color: #ffffff;
+        }
+
+        body.dark-mode .stat-subtitle {
+            color: #64748b;
+        }
+
+        body.dark-mode .income .stat-icon {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        body.dark-mode .expense .stat-icon {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        body.dark-mode .balance .stat-icon {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        body.dark-mode .savings .stat-icon {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+        }
+
+        body.dark-mode .card {
+            background: #101c2d;
+            border-color: #1e2d42;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        body.dark-mode .card-header h2 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .card-header p {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .view-all {
+            color: #38bdf8;
+        }
+
+        body.dark-mode .chart {
+            border-bottom-color: #1e2d42;
+        }
+
+        body.dark-mode .month-label {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .legend-item {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .account-item {
+            background: #090e17;
+            border-color: #1a293f;
+        }
+
+        body.dark-mode .account-name {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .account-type {
+            color: #8993a4;
+        }
+
+        body.dark-mode .account-balance {
+            color: #38bdf8;
+        }
+
+        body.dark-mode .account-icon {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+        }
+
+        body.dark-mode .transaction-item {
+            border-bottom-color: #162436;
+        }
+
+        body.dark-mode .transaction-category {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .transaction-description {
+            color: #8993a4;
+        }
+
+        body.dark-mode .transaction-date {
+            color: #64748b;
+        }
+
+        body.dark-mode .transaction-icon.income {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        body.dark-mode .transaction-icon.expense {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        body.dark-mode .category-row {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .category-name {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .category-progress-bg {
+            background: #162436;
+        }
+
+        body.dark-mode .category-info span {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .dashboard-section-label {
+            color: #64748b;
+        }
+
+        body.dark-mode .empty-state {
+            color: #64748b;
+        }
+
+        body.dark-mode .balance-highlight {
+            background: linear-gradient(135deg, #090e17, #132236);
+            border-color: #1e2d42;
+        }
+
+        @media (max-width: 900px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .theme-btn .theme-label {
+                display: none;
+            }
+            .theme-btn {
+                padding: 8px 10px;
+            }
+        }
+
     </style>
 
 </head>
 
 <body>
+
+<script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 <div class="app-layout">
 
@@ -964,8 +1247,28 @@ $stmt->close();
                 <p>Welcome back! Here's your financial overview.</p>
             </div>
 
-            <div class="date-badge">
-                📅 <?php echo date("d M Y"); ?>
+            <div class="header-actions">
+
+                <!-- Theme Switcher: Light / Dark / System -->
+                <div class="theme-switcher" id="themeSwitcher" role="radiogroup" aria-label="Theme Selection">
+                    <button type="button" class="theme-btn" data-theme="light" title="Light Theme" onclick="setAppTheme('light')">
+                        <span class="theme-icon">☀️</span>
+                        <span class="theme-label">Light</span>
+                    </button>
+                    <button type="button" class="theme-btn" data-theme="dark" title="Dark Theme" onclick="setAppTheme('dark')">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-label">Dark</span>
+                    </button>
+                    <button type="button" class="theme-btn" data-theme="system" title="System Theme (Follows OS)" onclick="setAppTheme('system')">
+                        <span class="theme-icon">💻</span>
+                        <span class="theme-label">System</span>
+                    </button>
+                </div>
+
+                <div class="date-badge">
+                    📅 <?php echo date("d M Y"); ?>
+                </div>
+
             </div>
 
         </div>
@@ -1510,6 +1813,24 @@ $stmt->close();
     </main>
 
 </div>
+
+<script>
+    // Delegate theme switching to universal theme manager in theme.js
+    function setAppTheme(theme) {
+        if (typeof window.setExpenseTheme === 'function') {
+            window.setExpenseTheme(theme);
+        } else {
+            localStorage.setItem('expenseTrackerTheme', theme);
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.documentElement.classList.remove('dark-mode');
+            }
+        }
+    }
+</script>
 
 </body>
 

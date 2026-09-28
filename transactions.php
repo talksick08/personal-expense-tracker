@@ -5,6 +5,16 @@ require_once "auth.php";
 $message = "";
 $message_type = "";
 
+if (isset($_GET['deleted']) && $_GET['deleted'] === '1') {
+    $message = "Transaction deleted successfully.";
+    $message_type = "success";
+}
+
+if (isset($_GET['updated']) && $_GET['updated'] === '1') {
+    $message = "Transaction updated successfully.";
+    $message_type = "success";
+}
+
 
 /* =========================================================
    ADD TRANSACTION
@@ -333,6 +343,16 @@ $balance = $total_income - $total_expenses;
 
     <title>Transactions - Expense Tracker</title>
 
+    <script>
+        (function() {
+            var theme = localStorage.getItem('expenseTrackerTheme') || 'system';
+            var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="dark_theme.css">
 
     <style>
 
@@ -1188,6 +1208,11 @@ $balance = $total_income - $total_expenses;
 
 
 <body>
+<script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 
 <div class="app-layout">

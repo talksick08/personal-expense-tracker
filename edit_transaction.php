@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $update->close();
 
-            header("Location: transactions.php");
+            header("Location: transactions.php?updated=1");
             exit;
 
         } else {
@@ -195,6 +195,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Edit Transaction | Expense Tracker</title>
+
+<script>
+    (function() {
+        var theme = localStorage.getItem('expenseTrackerTheme') || 'system';
+        var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+            document.documentElement.classList.add('dark-mode');
+        }
+    })();
+</script>
+<link rel="stylesheet" href="dark_theme.css">
 
 <style>
 
@@ -328,6 +339,11 @@ body {
 </head>
 
 <body>
+<script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 <div class="main">
 
@@ -335,9 +351,14 @@ body {
 
         <h1>Edit Transaction</h1>
 
-        <a href="transactions.php" class="back-btn">
-            ← Transactions
-        </a>
+        <div class="topbar-actions">
+            <button type="button" class="edit-theme-toggle" id="editPageThemeToggle" onclick="window.toggleExpenseTheme()" title="Toggle Theme">
+                🌙 Dark
+            </button>
+            <a href="transactions.php" class="back-btn">
+                ← Transactions
+            </a>
+        </div>
 
     </div>
 
@@ -509,6 +530,7 @@ body {
 
 </div>
 
+<script src="theme.js"></script>
 </body>
 
 </html>

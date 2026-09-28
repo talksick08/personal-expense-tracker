@@ -6,7 +6,7 @@ require_once "db.php";
 $message = "";
 $success = "";
 
-if (!isset($_SESSION["reset_user_id"])) {
+if (!isset($_SESSION["reset_user_id"]) || empty($_SESSION["reset_verified"])) {
 
     header("Location: forgot_password.php");
     exit;
@@ -50,8 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             unset($_SESSION["reset_user_id"]);
             unset($_SESSION["reset_email"]);
+            unset($_SESSION["reset_verified"]);
 
-            header("Location: login.php");
+            header("Location: login.php?reset=1");
             exit;
 
         } else {

@@ -497,6 +497,16 @@ $budget_stmt->close();
         Budgets - Personal Expense Tracker
     </title>
 
+    <script>
+        (function() {
+            var theme = localStorage.getItem('expenseTrackerTheme') || 'system';
+            var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="dark_theme.css">
 
 <style>
 
@@ -1359,6 +1369,11 @@ body {
 
 
 <body>
+<script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 
 <div class="app-layout">
@@ -1922,12 +1937,7 @@ body {
 
 
                                 <a
-                                    href="
-                                        budgets.php?delete=
-                                        <?php
-                                        echo $budget['id'];
-                                        ?>
-                                    "
+                                    href="budgets.php?delete=<?php echo (int)$budget['id']; ?>"
                                     class="delete-link"
                                     onclick="
                                         return confirm(

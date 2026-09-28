@@ -2,6 +2,8 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
+<link rel="stylesheet" href="dark_theme.css">
+
 <style>
 
 /* =====================================================
@@ -392,6 +394,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 Settings
             </a>
 
+            <?php if (!empty($is_admin)): ?>
+            <!-- USER MANAGEMENT (ADMIN) -->
+            <a
+                href="admin_users.php"
+                class="<?php echo $current_page === 'admin_users.php' ? 'active' : ''; ?>"
+            >
+                <span class="nav-icon">👥</span>
+                Users Manager
+                <span style="margin-left: auto; font-size: 10px; font-weight: 700; background: rgba(32, 185, 245, 0.2); color: #38bdf8; padding: 2px 7px; border-radius: 6px; text-transform: uppercase;">Admin</span>
+            </a>
+
+            <!-- EMAIL CONFIGURATION (ADMIN) -->
+            <a
+                href="email_config.php"
+                class="<?php echo $current_page === 'email_config.php' ? 'active' : ''; ?>"
+            >
+                <span class="nav-icon">✉️</span>
+                Email Settings
+                <span style="margin-left: auto; font-size: 10px; font-weight: 700; background: rgba(32, 185, 245, 0.2); color: #38bdf8; padding: 2px 7px; border-radius: 6px; text-transform: uppercase;">Admin</span>
+            </a>
+            <?php endif; ?>
+
 
             <!-- HELP & SUPPORT -->
 
@@ -405,9 +429,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         </div>
 
+        <!-- THEME SWITCHER -->
+        <div class="sidebar-theme-panel">
+            <div class="sidebar-theme-header">
+                <span class="sidebar-theme-title">Appearance</span>
+                <span class="sidebar-theme-badge" id="sidebarThemeModeText">Dark</span>
+            </div>
+            <div class="sidebar-theme-group" role="radiogroup" aria-label="Appearance Mode">
+                <button type="button" class="sidebar-theme-btn" data-theme="light" title="Light Mode" onclick="window.setExpenseTheme('light')">
+                    <span class="theme-icon">☀️</span>
+                    <span class="theme-lbl">Light</span>
+                </button>
+                <button type="button" class="sidebar-theme-btn" data-theme="dark" title="Dark Mode" onclick="window.setExpenseTheme('dark')">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-lbl">Dark</span>
+                </button>
+                <button type="button" class="sidebar-theme-btn" data-theme="system" title="System Theme (Follows OS)" onclick="window.setExpenseTheme('system')">
+                    <span class="theme-icon">💻</span>
+                    <span class="theme-lbl">Auto</span>
+                </button>
+            </div>
+        </div>
 
         <!-- LOGOUT -->
-
         <a
             href="logout.php"
             class="logout-link"
@@ -419,3 +463,5 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </nav>
 
 </aside>
+
+<script src="theme.js"></script>

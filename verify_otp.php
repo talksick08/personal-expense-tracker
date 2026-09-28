@@ -204,6 +204,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             /*
             |--------------------------------------------------------------------------
+            | PASSWORD RESET VERIFICATION
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $otp_purpose ===
+                "password_reset"
+            ) {
+                $_SESSION["reset_user_id"] = (int)$user["id"];
+                $_SESSION["reset_email"] = $user["email"];
+                $_SESSION["reset_verified"] = true;
+
+                unset(
+                    $_SESSION["otp_user_id"],
+                    $_SESSION["otp_purpose"]
+                );
+
+                header("Location: reset_password.php");
+                exit;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
             | TWO FACTOR AUTHENTICATION
             |--------------------------------------------------------------------------
             */
@@ -298,20 +321,22 @@ if (
         */
 
         if (
-            $otp_purpose ===
-            "email_verification"
+            $otp_purpose === "email_verification" ||
+            $otp_purpose === "two_factor" ||
+            $otp_purpose === "password_reset"
         ) {
 
             $sent = send_otp_email(
                 $user["email"],
+                $user["name"] ?? "User",
                 $otp,
-                "email_verification"
+                $otp_purpose
             );
 
             if ($sent) {
 
                 $message =
-                    "A new OTP has been sent to your email.";
+                    "A new verification code has been sent to your email.";
 
                 $message_type =
                     "success";
@@ -319,7 +344,7 @@ if (
             } else {
 
                 $message =
-                    "The OTP was generated, but the email could not be sent.";
+                    "The OTP was generated, but the email could not be sent. Check SMTP configuration.";
 
                 $message_type =
                     "error";

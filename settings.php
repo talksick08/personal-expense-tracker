@@ -530,7 +530,7 @@ if ($profile_photo !== "") {
 }
 
 $initial = strtoupper(
-    mb_substr(trim($display_name), 0, 1)
+    substr(trim($display_name), 0, 1)
 );
 
 $initial = $initial ?: "U";
@@ -571,6 +571,17 @@ $completion = min($completion, 100);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Settings | ExpenseTracker</title>
+
+    <script>
+        (function() {
+            var theme = localStorage.getItem('expenseTrackerTheme') || 'system';
+            var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="dark_theme.css">
 
     <style>
 
@@ -1195,6 +1206,11 @@ $completion = min($completion, 100);
 </head>
 
 <body>
+<script>
+    if (document.documentElement.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+    }
+</script>
 
 <?php include "sidebar.php"; ?>
 
@@ -1221,6 +1237,25 @@ $completion = min($completion, 100);
 
     <?php endif; ?>
 
+    <?php if (!empty($is_admin)): ?>
+        <div style="background: linear-gradient(135deg, rgba(22, 181, 244, 0.15), rgba(22, 140, 232, 0.08)); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #16b5f4, #168ce8); display: flex; align-items: center; justify-content: center; font-size: 20px;">🛡️</div>
+                <div>
+                    <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: #ffffff;">Administrator Control Hub</h3>
+                    <p style="margin: 3px 0 0; font-size: 13px; color: #8da2bb;">Manage user profiles, permissions, passwords, and global email/SMTP delivery servers.</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <a href="admin_users.php" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                    👥 Manage Users
+                </a>
+                <a href="email_config.php" style="background: linear-gradient(135deg, #16b5f4, #168ce8); color: #ffffff; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(22,140,232,0.25);">
+                    ✉️ Email Config
+                </a>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="settings-grid">
 
@@ -2148,13 +2183,12 @@ applyTheme(savedTheme);
 themeSelect.addEventListener(
     "change",
     function () {
-
-        localStorage.setItem(
-            "expenseTrackerTheme",
-            this.value
-        );
-
-        applyTheme(this.value);
+        if (typeof window.setExpenseTheme === "function") {
+            window.setExpenseTheme(this.value);
+        } else {
+            localStorage.setItem("expenseTrackerTheme", this.value);
+            applyTheme(this.value);
+        }
     }
 );
 
