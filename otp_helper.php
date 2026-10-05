@@ -20,6 +20,27 @@ function generate_otp(): string
     );
 }
 
+function ensure_otp_table(mysqli $conn): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $sql = "CREATE TABLE IF NOT EXISTS otp_verifications (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        purpose VARCHAR(50) NOT NULL,
+        otp_hash VARCHAR(255) NOT NULL,
+        expires_at DATETIME NOT NULL,
+        attempts INT NOT NULL DEFAULT 0,
+        used_at DATETIME NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_user_purpose (user_id, purpose, used_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+    @$conn->query($sql);
+    $checked = true;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Delete previous unused OTPs
@@ -31,6 +52,8 @@ function clear_old_otps(
     int $user_id,
     string $purpose
 ): void {
+
+    ensure_otp_table($conn);
 
     $stmt = $conn->prepare("
         DELETE FROM otp_verifications
@@ -123,6 +146,12 @@ function create_otp(
 
     $stmt->close();
 
+    // Store in session as emergency fallback if host blocks outbound mail/SMTP
+    $_SESSION["last_generated_otp"] = $otp;
+    $_SESSION["last_otp_purpose"] = $purpose;
+    $_SESSION["last_otp_user_id"] = $user_id;
+    $_SESSION["last_otp_time"] = time();
+
     return $otp;
 }
 
@@ -139,11 +168,14 @@ function verify_otp(
     string $otp
 ): array {
 
+    ensure_otp_table($conn);
+
     $stmt = $conn->prepare("
         SELECT
             id,
             otp_hash,
             expires_at,
+            TIMESTAMPDIFF(SECOND, NOW(), expires_at) AS seconds_left,
             attempts,
             used_at
         FROM otp_verifications
@@ -200,10 +232,17 @@ function verify_otp(
     }
 
     /*
-    Check expiration
+    Check expiration (timezone-safe comparison using MySQL internal timestamp difference)
     */
 
-    if (strtotime($row["expires_at"]) < time()) {
+    $is_expired = false;
+    if (isset($row["seconds_left"]) && $row["seconds_left"] !== null) {
+        $is_expired = ((int)$row["seconds_left"] <= 0);
+    } else {
+        $is_expired = (strtotime($row["expires_at"]) < time());
+    }
+
+    if ($is_expired) {
 
         return [
             "success" => false,
@@ -375,6 +414,13 @@ function send_otp_email(
         $text_message,
         $recipient_name
     );
+
+    if (empty($result['success'])) {
+        $_SESSION["otp_delivery_failed"] = true;
+        $_SESSION["otp_delivery_error"] = $result['message'] ?? 'Email delivery failed';
+    } else {
+        unset($_SESSION["otp_delivery_failed"], $_SESSION["otp_delivery_error"]);
+    }
 
     return !empty($result['success']);
 }

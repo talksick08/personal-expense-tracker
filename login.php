@@ -189,31 +189,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 "two_factor"
                             );
 
+                            $_SESSION["otp_user_id"] =
+                                (int) $user["id"];
+
+                            $_SESSION["otp_purpose"] =
+                                "two_factor";
+
                             if (!$sent) {
-
-                                unset(
-                                    $_SESSION["pending_2fa_user_id"],
-                                    $_SESSION["pending_2fa_remember"]
-                                );
-
-                                $message =
-                                    "Unable to send the verification code. " .
-                                    "Please check your email configuration.";
-
+                                $_SESSION["otp_delivery_failed"] = true;
                             } else {
-
-                                $_SESSION["otp_user_id"] =
-                                    (int) $user["id"];
-
-                                $_SESSION["otp_purpose"] =
-                                    "two_factor";
-
-                                header(
-                                    "Location: verify_otp.php"
-                                );
-
-                                exit;
+                                unset($_SESSION["otp_delivery_failed"]);
                             }
+
+                            header(
+                                "Location: verify_otp.php"
+                            );
+
+                            exit;
 
                         } catch (Exception $e) {
 

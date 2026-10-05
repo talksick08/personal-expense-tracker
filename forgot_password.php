@@ -54,16 +54,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         $otp = create_otp($conn, (int)$user["id"], "password_reset", 10);
                         $sent = send_otp_email($user["email"], $user["name"], $otp, "password_reset");
 
-                        if ($sent) {
-                            $_SESSION["otp_user_id"] = (int)$user["id"];
-                            $_SESSION["otp_purpose"] = "password_reset";
+                        $_SESSION["otp_user_id"] = (int)$user["id"];
+                        $_SESSION["otp_purpose"] = "password_reset";
 
-                            header("Location: verify_otp.php");
-                            exit;
+                        if (!$sent) {
+                            $_SESSION["otp_delivery_failed"] = true;
                         } else {
-                            $message = "Unable to send the verification code to your email. Please check SMTP configuration.";
-                            $message_type = "error";
+                            unset($_SESSION["otp_delivery_failed"]);
                         }
+
+                        header("Location: verify_otp.php");
+                        exit;
                     } catch (Throwable $e) {
                         $message = "Unable to generate verification code. Please try again.";
                         $message_type = "error";

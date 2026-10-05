@@ -213,18 +213,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $otp = create_otp($conn, $user_id, "email_verification", 5);
 
-            if (send_otp_email($display_email, $otp, "email_verification")) {
-                $_SESSION["otp_user_id"] = $user_id;
-                $_SESSION["otp_purpose"] = "email_verification";
+            $sent = send_otp_email($display_email, $otp, "email_verification");
 
-                header("Location: verify_otp.php");
-                exit;
+            $_SESSION["otp_user_id"] = $user_id;
+            $_SESSION["otp_purpose"] = "email_verification";
+
+            if (!$sent) {
+                $_SESSION["otp_delivery_failed"] = true;
+            } else {
+                unset($_SESSION["otp_delivery_failed"]);
             }
 
-            settings_redirect_message(
-                "error",
-                "The OTP was generated, but the email could not be sent. Configure SMTP/email delivery first."
-            );
+            header("Location: verify_otp.php");
+            exit;
 
         } catch (Throwable $e) {
             settings_redirect_message("error", "Unable to generate the email verification OTP.");

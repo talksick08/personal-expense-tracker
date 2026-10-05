@@ -37,7 +37,8 @@ if (
         $otp_purpose,
         [
             "email_verification",
-            "two_factor"
+            "two_factor",
+            "password_reset"
         ],
         true
     )
@@ -108,6 +109,10 @@ $message_type = "";
 
 $is_email_verification =
     ($otp_purpose === "email_verification");
+$is_password_reset =
+    ($otp_purpose === "password_reset");
+$is_two_factor =
+    ($otp_purpose === "two_factor");
 
 /*
 |--------------------------------------------------------------------------
@@ -188,7 +193,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 unset(
                     $_SESSION["otp_user_id"],
-                    $_SESSION["otp_purpose"]
+                    $_SESSION["otp_purpose"],
+                    $_SESSION["last_generated_otp"],
+                    $_SESSION["last_otp_purpose"],
+                    $_SESSION["last_otp_user_id"],
+                    $_SESSION["last_otp_time"],
+                    $_SESSION["otp_delivery_failed"],
+                    $_SESSION["otp_delivery_error"]
                 );
 
                 /*
@@ -196,7 +207,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 */
 
                 header(
-                    "Location: settings.php"
+                    "Location: settings.php?verified=1"
                 );
 
                 exit;
@@ -218,7 +229,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 unset(
                     $_SESSION["otp_user_id"],
-                    $_SESSION["otp_purpose"]
+                    $_SESSION["otp_purpose"],
+                    $_SESSION["last_generated_otp"],
+                    $_SESSION["last_otp_purpose"],
+                    $_SESSION["last_otp_user_id"],
+                    $_SESSION["last_otp_time"],
+                    $_SESSION["otp_delivery_failed"],
+                    $_SESSION["otp_delivery_error"]
                 );
 
                 header("Location: reset_password.php");
@@ -263,7 +280,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $_SESSION["otp_user_id"],
                     $_SESSION["otp_purpose"],
                     $_SESSION["pending_2fa_user_id"],
-                    $_SESSION["pending_2fa_remember"]
+                    $_SESSION["pending_2fa_remember"],
+                    $_SESSION["last_generated_otp"],
+                    $_SESSION["last_otp_purpose"],
+                    $_SESSION["last_otp_user_id"],
+                    $_SESSION["last_otp_time"],
+                    $_SESSION["otp_delivery_failed"],
+                    $_SESSION["otp_delivery_error"]
                 );
 
                 /*
@@ -334,6 +357,7 @@ if (
             );
 
             if ($sent) {
+                unset($_SESSION["otp_delivery_failed"], $_SESSION["otp_delivery_error"]);
 
                 $message =
                     "A new verification code has been sent to your email.";
@@ -342,12 +366,13 @@ if (
                     "success";
 
             } else {
+                $_SESSION["otp_delivery_failed"] = true;
 
                 $message =
-                    "The OTP was generated, but the email could not be sent. Check SMTP configuration.";
+                    "A new code was generated, but the email could not be delivered to your inbox. Please use the code shown below.";
 
                 $message_type =
-                    "error";
+                    "warning";
             }
 
         } else {
@@ -391,7 +416,7 @@ if (
     <title>
         <?= $is_email_verification
             ? "Verify Email"
-            : "Two-Factor Authentication" ?>
+            : ($is_password_reset ? "Reset Password" : "Two-Factor Authentication") ?>
         | ExpenseTracker
     </title>
     <link rel="stylesheet" href="responsive_mobile.css">
@@ -545,6 +570,16 @@ if (
             color: #c0392b;
         }
 
+        .alert.warning {
+
+            background: #fffbeb;
+
+            border:
+                1px solid #fde68a;
+
+            color: #b45309;
+        }
+
         label {
 
             display: block;
@@ -688,7 +723,7 @@ if (
 
         <?= $is_email_verification
             ? "📧"
-            : "🛡️" ?>
+            : ($is_password_reset ? "🔑" : "🛡️") ?>
 
     </div>
 
@@ -696,7 +731,7 @@ if (
 
         <?= $is_email_verification
             ? "Verify Your Email"
-            : "Two-Factor Authentication" ?>
+            : ($is_password_reset ? "Reset Your Password" : "Two-Factor Authentication") ?>
 
     </h1>
 
@@ -714,15 +749,51 @@ if (
 
             </span>
 
+        <?php elseif ($is_password_reset): ?>
+
+            We sent a 6-digit password reset code to
+
+            <span class="email">
+
+                <?= htmlspecialchars(
+                    $user["email"]
+                ) ?>
+
+            </span>. Enter it below to set a new password.
+
         <?php else: ?>
 
             Enter the 6-digit security
-            code sent to your registered
-            verification method.
+            code sent to
+
+            <span class="email">
+
+                <?= htmlspecialchars(
+                    $user["email"]
+                ) ?>
+
+            </span>
 
         <?php endif; ?>
 
     </p>
+
+    <?php if (!empty($_SESSION["otp_delivery_failed"])): ?>
+
+        <div class="alert warning" style="margin-bottom: 20px; line-height: 1.5; text-align: left;">
+            <div style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span>⚠️</span> <span>Email Delivery Notice</span>
+            </div>
+            <div style="font-size: 13px;">The email server could not deliver the message to your inbox (the hosting environment may block outbound SMTP/mail).</div>
+            <?php if (!empty($_SESSION["last_generated_otp"]) && !empty($_SESSION["last_otp_purpose"]) && $_SESSION["last_otp_purpose"] === $otp_purpose): ?>
+                <div style="margin-top: 10px; padding: 10px 12px; background: rgba(0,0,0,0.04); border-radius: 8px;">
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #78350f; font-weight: 700; margin-bottom: 4px;">Emergency Security Code</div>
+                    <div style="display: inline-block; font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: 800; letter-spacing: 6px; color: #0284c7; background: #e0f2fe; padding: 4px 12px; border-radius: 8px;"><?= htmlspecialchars($_SESSION["last_generated_otp"]) ?></div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+    <?php endif; ?>
 
     <?php if ($message !== ""): ?>
 
@@ -780,6 +851,12 @@ if (
 
             <a href="settings.php">
                 Back to Settings
+            </a>
+
+        <?php elseif ($is_password_reset): ?>
+
+            <a href="forgot_password.php">
+                Back to Forgot Password
             </a>
 
         <?php else: ?>

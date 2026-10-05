@@ -11,12 +11,37 @@ if (!defined('MAILER_INCLUDED')) {
     define('MAILER_INCLUDED', true);
 }
 
+function ensure_email_settings_table(mysqli $conn): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $sql = "CREATE TABLE IF NOT EXISTS email_settings (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        smtp_enabled TINYINT(1) NOT NULL DEFAULT 1,
+        smtp_host VARCHAR(191) NOT NULL DEFAULT 'smtp.gmail.com',
+        smtp_port INT NOT NULL DEFAULT 587,
+        smtp_encryption VARCHAR(20) NOT NULL DEFAULT 'tls',
+        smtp_username VARCHAR(191) NOT NULL DEFAULT '',
+        smtp_password VARCHAR(255) NOT NULL DEFAULT '',
+        from_email VARCHAR(191) NOT NULL DEFAULT '',
+        from_name VARCHAR(191) NOT NULL DEFAULT 'Personal Expense Tracker',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+    @$conn->query($sql);
+    $checked = true;
+}
+
 /**
  * Retrieve email settings from database
  */
 function get_email_settings(mysqli $conn): array
 {
     require_once __DIR__ . "/env.php";
+
+    ensure_email_settings_table($conn);
 
     $defaults = [
         'id' => 1,
@@ -225,7 +250,7 @@ function smtp_send_mail(
 
     $errno = 0;
     $errstr = '';
-    $timeout = 15;
+    $timeout = 4;
 
     $socket = @stream_socket_client(
         "{$socket_host}:{$port}",
@@ -462,12 +487,25 @@ function send_app_mail(
 ): array {
     $settings = get_email_settings($conn);
 
-    if (!empty($settings['smtp_enabled']) && !empty($settings['smtp_host'])) {
-        return smtp_send_mail($settings, $to_email, $subject, $html_content, $text_content, $to_name);
+    $has_smtp_creds = !empty($settings['smtp_enabled'])
+        && !empty($settings['smtp_host'])
+        && !empty($settings['smtp_username'])
+        && !empty($settings['smtp_password']);
+
+    // Attempt SMTP if enabled and valid credentials are provided
+    if ($has_smtp_creds) {
+        $smtp_res = smtp_send_mail($settings, $to_email, $subject, $html_content, $text_content, $to_name);
+        if (!empty($smtp_res['success'])) {
+            return $smtp_res;
+        }
+        // SMTP failed - attempt fallback to PHP mail()
+        error_log("send_app_mail: SMTP delivery failed (" . ($smtp_res['message'] ?? 'unknown') . "). Attempting PHP mail() fallback.");
     }
 
     // Fallback to PHP mail()
-    $from_email = !empty($settings['from_email']) ? $settings['from_email'] : 'no-reply@localhost';
+    $from_email = !empty($settings['from_email'])
+        ? $settings['from_email']
+        : (!empty($settings['smtp_username']) ? $settings['smtp_username'] : 'no-reply@' . ($_SERVER['SERVER_NAME'] ?? 'localhost'));
     $from_name = !empty($settings['from_name']) ? $settings['from_name'] : 'Personal Expense Tracker';
 
     $encoded_from = '=?UTF-8?B?' . base64_encode($from_name) . '?= <' . $from_email . '>';
@@ -485,8 +523,8 @@ function send_app_mail(
 
     return [
         'success' => (bool) $ok,
-        'message' => $ok ? 'Email sent via PHP mail().' : 'PHP mail() failed. Please configure SMTP credentials.',
-        'log' => $ok ? 'Delivered using mail()' : 'Failed delivering using PHP mail()'
+        'message' => $ok ? 'Email sent via PHP mail().' : 'Outbound email delivery failed. Both SMTP and PHP mail() were unreachable.',
+        'log' => $ok ? 'Delivered using PHP mail()' : 'Failed delivering using both SMTP and PHP mail()'
     ];
 }
 
