@@ -490,6 +490,82 @@ function smtp_send_mail(
 }
 
 /**
+ * Send email using HTTPS REST API (Brevo / Sendinblue or Resend)
+ * This works 100% on free shared hosts like InfinityFree where SMTP ports 25, 465, 587 are blocked.
+ */
+function http_api_send_mail(
+    string $apiKey,
+    string $to_email,
+    string $subject,
+    string $html_content,
+    string $text_content = '',
+    string $to_name = '',
+    string $from_email = '',
+    string $from_name = 'Personal Expense Tracker'
+): array {
+    if (empty($apiKey)) {
+        return ['success' => false, 'message' => 'API key is empty.'];
+    }
+
+    $from_email = !empty($from_email) ? $from_email : 'rahulmahanta156@gmail.com';
+
+    // 1. Resend API (keys begin with 're_')
+    if (strpos($apiKey, 're_') === 0) {
+        $url = 'https://api.resend.com/emails';
+        $payload = [
+            'from' => "{$from_name} <onboarding@resend.dev>",
+            'to' => [$to_email],
+            'subject' => $subject,
+            'html' => $html_content,
+            'text' => $text_content ?: strip_tags($html_content)
+        ];
+        $headers = [
+            'Authorization: Bearer ' . $apiKey,
+            'Content-Type: application/json'
+        ];
+    } else {
+        // 2. Brevo (Sendinblue) API
+        $url = 'https://api.brevo.com/v3/smtp/email';
+        $payload = [
+            'sender' => ['name' => $from_name, 'email' => $from_email],
+            'to' => [['email' => $to_email, 'name' => $to_name ?: 'User']],
+            'subject' => $subject,
+            'htmlContent' => $html_content,
+            'textContent' => $text_content ?: strip_tags($html_content)
+        ];
+        $headers = [
+            'api-key: ' . $apiKey,
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ];
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err = curl_error($ch);
+    curl_close($ch);
+
+    if ($err) {
+        return ['success' => false, 'message' => "HTTP request error: {$err}"];
+    }
+
+    if ($httpCode >= 200 && $httpCode < 300) {
+        return ['success' => true, 'message' => 'Email sent successfully via HTTPS API!'];
+    }
+
+    return ['success' => false, 'message' => "API returned HTTP {$httpCode}: {$response}"];
+}
+
+/**
  * Main application mail sender
  * Checks database settings; uses SMTP if enabled, otherwise falls back to mail()
  */
@@ -502,6 +578,25 @@ function send_app_mail(
     string $to_name = ''
 ): array {
     $settings = get_email_settings($conn);
+
+    // Prioritize HTTPS REST API if configured (bypasses InfinityFree port firewall)
+    $apiKey = (string) env('MAIL_API_KEY', env('BREVO_API_KEY', env('RESEND_API_KEY', '')));
+    if (!empty($apiKey)) {
+        $api_res = http_api_send_mail(
+            $apiKey,
+            $to_email,
+            $subject,
+            $html_content,
+            $text_content,
+            $to_name,
+            $settings['from_email'],
+            $settings['from_name']
+        );
+        if (!empty($api_res['success'])) {
+            return $api_res;
+        }
+        error_log("send_app_mail: HTTP API delivery failed (" . ($api_res['message'] ?? 'unknown') . "). Attempting SMTP.");
+    }
 
     $has_smtp_creds = !empty($settings['smtp_enabled'])
         && !empty($settings['smtp_host'])
