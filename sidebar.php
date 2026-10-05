@@ -203,6 +203,37 @@ $current_page = basename($_SERVER['PHP_SELF']);
     transform: translateX(2px);
 }
 
+.sidebar-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar-header-logout-btn {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5 !important;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.sidebar-header-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.28);
+    color: #ffffff !important;
+}
+
+@media (max-width: 900px) {
+    .sidebar-header-logout-btn {
+        display: inline-flex;
+    }
+}
 
 </style>
 
@@ -226,6 +257,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <button type="button" class="mobile-quick-theme-btn" id="mobileQuickThemeBtn" aria-label="Toggle theme" onclick="window.toggleExpenseTheme()" title="Toggle Theme">
             <span id="mobileThemeIcon">🌙</span>
         </button>
+
+        <a href="logout.php" class="mobile-quick-logout-btn" aria-label="Log Out" title="Log Out" onclick="return confirm('Are you sure you want to log out?');">
+            <span class="mobile-logout-icon">🚪</span>
+            <span class="mobile-logout-text">Logout</span>
+        </a>
     </div>
 </header>
 
@@ -242,7 +278,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="logo">
             Expense<span>Tracker</span>
         </div>
-        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation menu" title="Close Menu">&times;</button>
+        <div class="sidebar-header-actions">
+            <a href="logout.php" class="sidebar-header-logout-btn" title="Log Out" onclick="return confirm('Are you sure you want to log out?');">
+                <span>🚪 Logout</span>
+            </a>
+            <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation menu" title="Close Menu">&times;</button>
+        </div>
     </div>
 
 
