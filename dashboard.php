@@ -218,8 +218,8 @@ $stmt->close();
             }
         })();
     </script>
-    <link rel="stylesheet" href="dark_theme.css">
-    <link rel="stylesheet" href="responsive_mobile.css">
+    <link rel="stylesheet" href="dark_theme.css?v=2.2">
+    <link rel="stylesheet" href="responsive_mobile.css?v=2.2">
 
     <style>
 
