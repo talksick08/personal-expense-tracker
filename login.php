@@ -40,6 +40,13 @@ $message_type = "error";
 if (isset($_GET["reset"]) && $_GET["reset"] === "1") {
     $message = "Your password has been reset successfully. Please sign in.";
     $message_type = "success";
+} elseif (isset($_SESSION["settings_message"])) {
+    $message = $_SESSION["settings_message"];
+    $message_type = $_SESSION["settings_message_type"] ?? "success";
+    unset($_SESSION["settings_message"], $_SESSION["settings_message_type"]);
+} elseif (isset($_GET["registered"]) && $_GET["registered"] === "1") {
+    $message = "Account created successfully! Please sign in.";
+    $message_type = "success";
 }
 
 

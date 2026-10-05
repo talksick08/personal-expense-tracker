@@ -1,5 +1,11 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($is_admin)) {
+    $is_admin = !empty($_SESSION["is_admin"]);
+}
 ?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">

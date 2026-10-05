@@ -63,7 +63,8 @@ $stmt = $conn->prepare("
     SELECT
         id,
         name,
-        email
+        email,
+        is_admin
     FROM users
     WHERE id = ?
     LIMIT 1
@@ -290,6 +291,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 $_SESSION["user_email"] =
                     $user["email"];
+
+                $_SESSION["is_admin"] =
+                    (int)($user["is_admin"] ?? 0);
 
                 /*
                 Clear OTP session.
