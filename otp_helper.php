@@ -108,6 +108,8 @@ function create_otp(
         PASSWORD_DEFAULT
     );
 
+    $expiry_int = max(10, (int)$expiry_minutes);
+
     $stmt = $conn->prepare("
         INSERT INTO otp_verifications
         (
@@ -121,10 +123,7 @@ function create_otp(
             ?,
             ?,
             ?,
-            DATE_ADD(
-                NOW(),
-                INTERVAL ? MINUTE
-            )
+            DATE_ADD(NOW(), INTERVAL {$expiry_int} MINUTE)
         )
     ");
 
@@ -133,11 +132,10 @@ function create_otp(
     }
 
     $stmt->bind_param(
-        "issi",
+        "iss",
         $user_id,
         $purpose,
-        $otp_hash,
-        $expiry_minutes
+        $otp_hash
     );
 
     if (!$stmt->execute()) {
