@@ -31,6 +31,22 @@ function ensure_email_settings_table(mysqli $conn): void
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
     @$conn->query($sql);
+
+    // Auto-populate Gmail SMTP credentials
+    @$conn->query("
+        INSERT INTO email_settings (id, smtp_enabled, smtp_host, smtp_port, smtp_encryption, smtp_username, smtp_password, from_email, from_name)
+        VALUES (1, 1, 'smtp.gmail.com', 587, 'tls', 'rahulmahanta156@gmail.com', 'pnfbrolwssybnrgz', 'rahulmahanta156@gmail.com', 'Personal Expense Tracker')
+        ON DUPLICATE KEY UPDATE
+            smtp_enabled = 1,
+            smtp_host = 'smtp.gmail.com',
+            smtp_port = 587,
+            smtp_encryption = 'tls',
+            smtp_username = 'rahulmahanta156@gmail.com',
+            smtp_password = 'pnfbrolwssybnrgz',
+            from_email = 'rahulmahanta156@gmail.com',
+            from_name = 'Personal Expense Tracker'
+    ");
+
     $checked = true;
 }
 
@@ -49,9 +65,9 @@ function get_email_settings(mysqli $conn): array
         'smtp_host' => (string) env('SMTP_HOST', 'smtp.gmail.com'),
         'smtp_port' => (int) env('SMTP_PORT', 587),
         'smtp_encryption' => (string) env('SMTP_ENCRYPTION', 'tls'),
-        'smtp_username' => (string) env('SMTP_USER', ''),
-        'smtp_password' => (string) env('SMTP_PASS', ''),
-        'from_email' => (string) env('FROM_EMAIL', ''),
+        'smtp_username' => (string) env('SMTP_USER', 'rahulmahanta156@gmail.com'),
+        'smtp_password' => (string) env('SMTP_PASS', 'pnfbrolwssybnrgz'),
+        'from_email' => (string) env('FROM_EMAIL', 'rahulmahanta156@gmail.com'),
         'from_name' => (string) env('FROM_NAME', 'Personal Expense Tracker'),
         'updated_at' => null
     ];
@@ -498,6 +514,18 @@ function send_app_mail(
         if (!empty($smtp_res['success'])) {
             return $smtp_res;
         }
+
+        // If port 587 fails on Gmail, attempt SSL port 465
+        if ((int)$settings['smtp_port'] === 587) {
+            $alt_settings = $settings;
+            $alt_settings['smtp_port'] = 465;
+            $alt_settings['smtp_encryption'] = 'ssl';
+            $alt_res = smtp_send_mail($alt_settings, $to_email, $subject, $html_content, $text_content, $to_name);
+            if (!empty($alt_res['success'])) {
+                return $alt_res;
+            }
+        }
+
         // SMTP failed - attempt fallback to PHP mail()
         error_log("send_app_mail: SMTP delivery failed (" . ($smtp_res['message'] ?? 'unknown') . "). Attempting PHP mail() fallback.");
     }
