@@ -2,6 +2,10 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="dark_theme.css">
 <link rel="stylesheet" href="responsive_mobile.css">
 
@@ -39,24 +43,152 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 
 /* =====================================================
-   LOGO
+   BRAND & LOGO SYSTEM (PREMIUM FINTECH AESTHETICS)
 ===================================================== */
 
-.sidebar .logo {
-    font-size: 25px;
-    font-weight: 800;
-
-    padding: 28px 24px;
-
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
-
-    color: #ffffff;
-
-    line-height: 1.2;
+.sidebar-header-row {
+    padding: 24px 20px 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.sidebar .logo span {
-    color: #20b9f5;
+.sidebar-brand-lockup,
+.mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease;
+}
+
+.sidebar-brand-lockup:active,
+.mobile-brand:active {
+    transform: scale(0.96);
+    opacity: 0.92;
+}
+
+/* Squircle Fintech Badge with Specular Lighting */
+.brand-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 52%, #4f46e5 100%);
+    color: #ffffff;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 14px -1px rgba(37, 99, 235, 0.45),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.50),
+        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.brand-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 11px 11px 14px 14px;
+    pointer-events: none;
+}
+
+.brand-badge-icon {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+    stroke: #ffffff;
+    stroke-width: 2.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    display: block;
+    position: relative;
+    z-index: 1;
+    transform: translateY(-0.5px);
+}
+
+.brand-badge-lg {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+}
+
+.brand-badge-lg .brand-badge-icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.35;
+}
+
+/* Typography & Wordmark */
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
+.brand-title {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 18.5px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.brand-title-lg {
+    font-size: 20.5px;
+}
+
+.brand-title-main {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.brand-title-accent {
+    background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    margin-left: 1px;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3));
+}
+
+.brand-subtitle {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    opacity: 0.85;
+    margin-top: 2.5px;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+}
+
+.sidebar .logo {
+    display: none;
 }
 
 
@@ -248,9 +380,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </span>
     </button>
 
-    <a href="dashboard.php" class="mobile-brand">
-        <span class="brand-currency">₹</span>
-        <span class="brand-name">Expense<span>Tracker</span></span>
+    <a href="dashboard.php" class="mobile-brand" aria-label="ExpenseTracker Home">
+        <div class="brand-badge">
+            <svg class="brand-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3c6.667 0 6.667-10 0-10"/>
+            </svg>
+        </div>
+        <div class="brand-text">
+            <div class="brand-title">
+                <span class="brand-title-main">Expense</span><span class="brand-title-accent">Tracker</span>
+            </div>
+            <div class="brand-subtitle">Smart Finances</div>
+        </div>
     </a>
 
     <div class="mobile-topbar-actions">
@@ -275,9 +416,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- LOGO & MOBILE CLOSE BUTTON -->
     <div class="sidebar-header-row">
-        <div class="logo">
-            Expense<span>Tracker</span>
-        </div>
+        <a href="dashboard.php" class="sidebar-brand-lockup" aria-label="ExpenseTracker Home">
+            <div class="brand-badge brand-badge-lg">
+                <svg class="brand-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3c6.667 0 6.667-10 0-10"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <div class="brand-title brand-title-lg">
+                    <span class="brand-title-main">Expense</span><span class="brand-title-accent">Tracker</span>
+                </div>
+                <div class="brand-subtitle">Smart Finances</div>
+            </div>
+        </a>
         <div class="sidebar-header-actions">
             <a href="logout.php" class="sidebar-header-logout-btn" title="Log Out" onclick="return confirm('Are you sure you want to log out?');">
                 <span>🚪 Logout</span>

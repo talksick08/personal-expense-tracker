@@ -99,6 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     >
 
     <title>Forgot Password | Personal Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="responsive_mobile.css">
 
     <style>
@@ -169,36 +172,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .logo {
-
             width: 52px;
-
             height: 52px;
-
             border-radius: 15px;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             margin-bottom: 25px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 52%, #4f46e5 100%);
+            box-shadow: 
+                0 6px 20px -2px rgba(37, 99, 235, 0.45),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.50),
+                inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #3b82f6,
-                    #14b8a6
-                );
-
-            font-size: 22px;
-
-            font-weight: 700;
-
-            box-shadow:
-                0 10px 30px
-                rgba(59, 130, 246, 0.20);
-
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 48%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 15px 15px 20px 20px;
+            pointer-events: none;
         }
 
 
@@ -420,7 +420,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div class="card">
 
     <div class="logo">
-        ₹
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="position: relative; z-index: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));">
+            <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3c6.667 0 6.667-10 0-10"/>
+        </svg>
     </div>
 
 

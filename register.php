@@ -109,6 +109,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Create Account | Personal Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="responsive_mobile.css">
 
     <style>
@@ -177,34 +180,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         .brand {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 12px;
-
-            font-size: 19px;
-            font-weight: 700;
+            text-decoration: none;
         }
 
-        .brand-icon {
-            width: 42px;
-            height: 42px;
+        .mobile-login-brand {
+            display: none;
+        }
 
-            border-radius: 12px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: linear-gradient(
-                135deg,
-                #3b82f6,
-                #14b8a6
-            );
-
-            font-size: 21px;
-
-            box-shadow:
-                0 8px 25px rgba(59, 130, 246, 0.25);
+        @media (max-width: 800px) {
+            .mobile-login-brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 22px;
+            }
         }
 
         .hero {
@@ -487,13 +479,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="left">
 
         <div class="brand">
-
-            <div class="brand-icon">
-                ₹
+            <div class="brand-badge brand-badge-lg">
+                <svg class="brand-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3c6.667 0 6.667-10 0-10"/>
+                </svg>
             </div>
-
-            Personal Expense Tracker
-
+            <div class="brand-text">
+                <div class="brand-title brand-title-lg">
+                    <span class="brand-title-main">Expense</span><span class="brand-title-accent">Tracker</span>
+                </div>
+                <div class="brand-subtitle">Smart Finances</div>
+            </div>
         </div>
 
         <div class="hero">
@@ -525,6 +521,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="right">
 
         <div class="form-box">
+
+            <div class="mobile-login-brand">
+                <div class="brand-badge">
+                    <svg class="brand-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3c6.667 0 6.667-10 0-10"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-title">
+                        <span class="brand-title-main">Expense</span><span class="brand-title-accent">Tracker</span>
+                    </div>
+                    <div class="brand-subtitle">Smart Finances</div>
+                </div>
+            </div>
 
             <div class="form-header">
 

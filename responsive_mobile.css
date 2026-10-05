@@ -52,13 +52,19 @@
         left: 0;
         right: 0;
         width: 100%;
-        height: 60px;
-        padding: 0 16px;
-        background: #101c2d;
+        min-height: calc(62px + env(safe-area-inset-top, 0px));
+        height: auto;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: 0;
+        padding-left: max(12px, env(safe-area-inset-left, 12px));
+        padding-right: max(12px, env(safe-area-inset-right, 12px));
+        background: rgba(16, 28, 45, 0.94);
+        backdrop-filter: blur(18px) saturate(180%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
         color: #ffffff;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         z-index: 9999;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.22);
     }
 
     /* Hamburger Menu Button */
@@ -120,34 +126,174 @@
         bottom: -7px;
     }
 
-    /* Brand in Mobile Topbar */
-    .mobile-brand {
-        display: flex;
+    /* Brand in Mobile Topbar & Drawers */
+    .mobile-brand,
+    .sidebar-brand-lockup {
+        display: inline-flex;
         align-items: center;
-        gap: 9px;
+        gap: 10px;
         text-decoration: none;
-        color: #ffffff;
-        font-weight: 800;
-        font-size: 19px;
-        letter-spacing: -0.5px;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease;
     }
 
+    .mobile-brand:active,
+    .sidebar-brand-lockup:active {
+        transform: scale(0.96);
+        opacity: 0.92;
+    }
+
+    /* Vector Fintech Squircle Badge */
+    .brand-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 52%, #4f46e5 100%);
+        color: #ffffff;
+        flex-shrink: 0;
+        overflow: hidden;
+        box-shadow: 
+            0 4px 14px -1px rgba(37, 99, 235, 0.45),
+            inset 0 1px 1px 0 rgba(255, 255, 255, 0.50),
+            inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    }
+
+    /* Specular glass reflection */
+    .brand-badge::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0) 100%);
+        border-radius: 11px 11px 14px 14px;
+        pointer-events: none;
+    }
+
+    .brand-badge-icon {
+        width: 20px;
+        height: 20px;
+        color: #ffffff;
+        stroke: #ffffff;
+        stroke-width: 2.3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+        display: block;
+        position: relative;
+        z-index: 1;
+        transform: translateY(-0.5px);
+    }
+
+    .brand-badge-lg {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .brand-badge-lg .brand-badge-icon {
+        width: 22px;
+        height: 22px;
+        stroke-width: 2.35;
+    }
+
+    /* Brand Wordmark Typography */
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .brand-title {
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18.5px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        display: flex;
+        align-items: baseline;
+        white-space: nowrap;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    .brand-title-lg {
+        font-size: 20px;
+    }
+
+    .brand-title-main {
+        color: #ffffff;
+        font-weight: 800;
+    }
+
+    .brand-title-accent {
+        background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+        margin-left: 1px;
+        filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3));
+    }
+
+    .brand-subtitle {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 8.5px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #7dd3fc;
+        opacity: 0.85;
+        margin-top: 2.5px;
+        line-height: 1;
+        white-space: nowrap;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Legacy compatibility fallbacks */
     .mobile-brand .brand-currency {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #16b5f4, #168ce8);
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #0ea5e9, #2563eb);
         color: #ffffff;
         font-weight: 800;
-        font-size: 16px;
-        box-shadow: 0 4px 12px rgba(22, 140, 232, 0.35);
+        font-size: 17px;
     }
 
     .mobile-brand .brand-name span {
-        color: #20b9f5;
+        color: #38bdf8;
+    }
+
+    @media (max-width: 375px) {
+        .brand-subtitle {
+            display: none;
+        }
+        .brand-title {
+            font-size: 17px;
+        }
+        .brand-badge {
+            width: 34px;
+            height: 34px;
+        }
+        .brand-badge-icon {
+            width: 18px;
+            height: 18px;
+        }
     }
 
     /* Topbar Right Actions */
