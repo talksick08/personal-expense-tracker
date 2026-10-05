@@ -138,6 +138,16 @@ body.dark-mode .calendar-title {
     color: #ffffff !important;
 }
 
+body.dark-mode .balance-amount {
+    color: #38bdf8 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark-mode .balance-label {
+    color: #94a3b8 !important;
+}
+
 body.dark-mode .card-header p {
     color: #8da2bb !important;
 }

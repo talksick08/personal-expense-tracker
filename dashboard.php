@@ -919,19 +919,27 @@ $stmt->close();
             align-items: flex-end;
             justify-content: space-between;
             gap: 20px;
+            padding: 22px 24px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f4fe 100%);
+            border: 1px solid #d0e7f9;
+            border-radius: 14px;
         }
 
         .balance-amount {
             font-size: 38px;
             font-weight: 800;
-            color: #172033;
+            color: #0f172a !important;
             line-height: 1.1;
+            letter-spacing: -0.5px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .balance-label {
-            margin-top: 7px;
-            color: #8993a4;
+            margin-top: 8px;
+            color: #64748b;
             font-size: 13px;
+            font-weight: 500;
         }
 
         .balance-action {
@@ -941,6 +949,7 @@ $stmt->close();
         @media (max-width: 700px) {
             .balance-highlight {
                 display: block;
+                padding: 18px 16px;
             }
 
             .balance-action {
@@ -948,7 +957,7 @@ $stmt->close();
             }
 
             .balance-amount {
-                font-size: 30px;
+                font-size: 28px;
             }
         }
 
@@ -1192,8 +1201,18 @@ $stmt->close();
         }
 
         body.dark-mode .balance-highlight {
-            background: linear-gradient(135deg, #090e17, #132236);
-            border-color: #1e2d42;
+            background: linear-gradient(135deg, #0b1523 0%, #112236 100%) !important;
+            border: 1px solid #1e3552 !important;
+        }
+
+        body.dark-mode .balance-amount {
+            color: #38bdf8 !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body.dark-mode .balance-label {
+            color: #94a3b8 !important;
         }
 
         @media (max-width: 900px) {

@@ -838,3 +838,39 @@ html.dark-mode .sidebar-close-btn:hover {
     background: rgba(239, 68, 68, 0.2) !important;
     color: #fca5a5 !important;
 }
+
+/* --------------------------------------------------------------------------
+   14. BALANCE HIGHLIGHT & AMOUNT CRISP CONTRAST
+   -------------------------------------------------------------------------- */
+.balance-highlight {
+    padding: 22px 24px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e6f4fe 100%);
+    border: 1px solid #d0e7f9;
+    border-radius: 14px;
+}
+
+.balance-amount {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark-mode .balance-highlight,
+html.dark-mode .balance-highlight {
+    background: linear-gradient(135deg, #0b1523 0%, #112236 100%) !important;
+    border: 1px solid #1e3552 !important;
+}
+
+body.dark-mode .balance-amount,
+html.dark-mode .balance-amount {
+    color: #38bdf8 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark-mode .balance-label,
+html.dark-mode .balance-label {
+    color: #94a3b8 !important;
+}
