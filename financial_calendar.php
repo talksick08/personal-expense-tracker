@@ -1151,6 +1151,7 @@ function getEventStatusClass($date)
         })();
     </script>
     <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="responsive_mobile.css">
 
 <style>
 

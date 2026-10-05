@@ -3,6 +3,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <link rel="stylesheet" href="dark_theme.css">
+<link rel="stylesheet" href="responsive_mobile.css">
 
 <style>
 
@@ -203,58 +204,45 @@ $current_page = basename($_SERVER['PHP_SELF']);
 }
 
 
-/* =====================================================
-   MOBILE / TABLET
-===================================================== */
-
-@media (max-width: 850px) {
-
-    .sidebar {
-        width: 210px;
-    }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 700px) {
-
-    .sidebar {
-        position: relative;
-
-        width: 100%;
-
-        min-height: auto;
-
-        height: auto;
-    }
-
-    .sidebar nav {
-        padding: 15px 12px;
-    }
-
-    .sidebar nav a {
-        min-height: 46px;
-    }
-
-}
-
 </style>
 
+<!-- =====================================================
+     MOBILE TOPBAR & BACKDROP
+===================================================== -->
+
+<header class="mobile-topbar" id="mobileTopbar">
+    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu" title="Open Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <a href="dashboard.php" class="mobile-brand">
+        <span class="brand-currency">₹</span>
+        <span class="brand-name">Expense<span>Tracker</span></span>
+    </a>
+
+    <div class="mobile-topbar-actions">
+        <button type="button" class="mobile-quick-theme-btn" id="mobileQuickThemeBtn" aria-label="Toggle theme" onclick="window.toggleExpenseTheme()" title="Toggle Theme">
+            <span id="mobileThemeIcon">🌙</span>
+        </button>
+    </div>
+</header>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
 <!-- =====================================================
      SHARED SIDEBAR
 ===================================================== -->
 
-<aside class="sidebar">
+<aside class="sidebar" id="appSidebar">
 
-    <!-- LOGO -->
-
-    <div class="logo">
-        Expense<span>Tracker</span>
+    <!-- LOGO & MOBILE CLOSE BUTTON -->
+    <div class="sidebar-header-row">
+        <div class="logo">
+            Expense<span>Tracker</span>
+        </div>
+        <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation menu" title="Close Menu">&times;</button>
     </div>
 
 
@@ -465,3 +453,98 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </aside>
 
 <script src="theme.js"></script>
+
+<script>
+(function() {
+    function setupMobileNav() {
+        var sidebar = document.getElementById('appSidebar');
+        var menuBtn = document.getElementById('mobileMenuBtn');
+        var closeBtn = document.getElementById('sidebarCloseBtn');
+        var backdrop = document.getElementById('sidebarBackdrop');
+
+        if (!sidebar) return;
+
+        function openSidebar() {
+            sidebar.classList.add('mobile-open');
+            if (backdrop) backdrop.classList.add('active');
+            document.body.classList.add('mobile-nav-lock');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('mobile-open');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.classList.remove('mobile-nav-lock');
+        }
+
+        function toggleSidebar() {
+            if (sidebar.classList.contains('mobile-open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+        if (menuBtn) {
+            menuBtn.removeEventListener('click', toggleSidebar);
+            menuBtn.addEventListener('click', toggleSidebar);
+        }
+
+        if (closeBtn) {
+            closeBtn.removeEventListener('click', closeSidebar);
+            closeBtn.addEventListener('click', closeSidebar);
+        }
+
+        if (backdrop) {
+            backdrop.removeEventListener('click', closeSidebar);
+            backdrop.addEventListener('click', closeSidebar);
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
+                closeSidebar();
+            }
+        });
+
+        // Close on clicking any link in sidebar when on mobile
+        var links = sidebar.querySelectorAll('nav a');
+        links.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 900) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Handle touch swipe left on sidebar to close
+        var startX = 0;
+        sidebar.addEventListener('touchstart', function(e) {
+            if (e.touches && e.touches[0]) {
+                startX = e.touches[0].clientX;
+            }
+        }, { passive: true });
+
+        sidebar.addEventListener('touchend', function(e) {
+            if (e.changedTouches && e.changedTouches[0]) {
+                var diffX = startX - e.changedTouches[0].clientX;
+                if (diffX > 60) {
+                    closeSidebar();
+                }
+            }
+        }, { passive: true });
+
+        // Auto-close if screen expands beyond 900px
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900) {
+                closeSidebar();
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupMobileNav);
+    } else {
+        setupMobileNav();
+    }
+})();
+</script>

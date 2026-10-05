@@ -66,6 +66,16 @@
             editToggle.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
             editToggle.innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
         }
+
+        // Sync mobile topbar quick theme toggle if present
+        var mobileThemeIcon = document.getElementById('mobileThemeIcon');
+        if (mobileThemeIcon) {
+            mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
+        }
+        var mobileThemeBtn = document.getElementById('mobileQuickThemeBtn');
+        if (mobileThemeBtn) {
+            mobileThemeBtn.setAttribute('title', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+        }
     }
 
     function applyExpenseTheme(theme) {

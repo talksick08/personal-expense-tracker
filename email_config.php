@@ -194,6 +194,7 @@ $has_saved_password = !empty($email_settings['smtp_password']);
         })();
     </script>
     <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="responsive_mobile.css">
 
     <style>
         * {

@@ -353,6 +353,7 @@ $balance = $total_income - $total_expenses;
         })();
     </script>
     <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="responsive_mobile.css">
 
     <style>
 
@@ -1717,6 +1718,9 @@ $balance = $total_income - $total_expenses;
                     Your latest financial activity.
                 </p>
 
+                <div class="mobile-table-hint">
+                    <span>👉</span> Swipe horizontally to view full table & actions
+                </div>
 
                 <div class="transaction-table-wrapper">
 

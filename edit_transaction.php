@@ -206,6 +206,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     })();
 </script>
 <link rel="stylesheet" href="dark_theme.css">
+<link rel="stylesheet" href="responsive_mobile.css">
 
 <style>
 

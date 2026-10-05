@@ -394,6 +394,7 @@ if (
             : "Two-Factor Authentication" ?>
         | ExpenseTracker
     </title>
+    <link rel="stylesheet" href="responsive_mobile.css">
 
     <style>
 

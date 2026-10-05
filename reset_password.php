@@ -81,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 >
 
 <title>Reset Password | Personal Expense Tracker</title>
+<link rel="stylesheet" href="responsive_mobile.css">
 
 <style>
 

@@ -145,6 +145,7 @@ $smtp_active = !empty($email_settings['smtp_enabled']) && !empty($email_settings
         })();
     </script>
     <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="responsive_mobile.css">
     <style>
         * {
             box-sizing: border-box;

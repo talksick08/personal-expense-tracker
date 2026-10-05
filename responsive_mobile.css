@@ -1,0 +1,840 @@
+/* ==========================================================================
+   PERSONAL EXPENSE TRACKER - MASTER MOBILE & RESPONSIVE SYSTEM
+   Universal responsive layout, mobile off-canvas drawer, touch targets,
+   and mobile table/form optimizations across every screen size.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL TOUCH & PREVENT IOS AUTO-ZOOM
+   -------------------------------------------------------------------------- */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media screen and (max-width: 900px) {
+    /* Prevent iOS Safari from auto-zooming when focusing on inputs */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="search"],
+    input[type="tel"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    button,
+    input[type="submit"],
+    input[type="button"],
+    .btn,
+    .quick-add-btn,
+    .apply-filter-btn {
+        touch-action: manipulation;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   2. MOBILE TOPBAR (Visible only on mobile/tablet <= 900px)
+   -------------------------------------------------------------------------- */
+.mobile-topbar {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .mobile-topbar {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 60px;
+        padding: 0 16px;
+        background: #101c2d;
+        color: #ffffff;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 9999;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    /* Hamburger Menu Button */
+    .mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .mobile-menu-btn:hover,
+    .mobile-menu-btn:focus-visible {
+        background: rgba(32, 185, 245, 0.18);
+        outline: none;
+    }
+
+    .mobile-menu-btn:active {
+        transform: scale(0.95);
+    }
+
+    .hamburger-box {
+        width: 22px;
+        height: 16px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .hamburger-inner,
+    .hamburger-inner::before,
+    .hamburger-inner::after {
+        width: 22px;
+        height: 2.2px;
+        background-color: #ffffff;
+        border-radius: 2px;
+        position: absolute;
+        transition: transform 0.22s ease, background-color 0.22s ease;
+    }
+
+    .hamburger-inner {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .hamburger-inner::before {
+        content: "";
+        top: -7px;
+    }
+
+    .hamburger-inner::after {
+        content: "";
+        bottom: -7px;
+    }
+
+    /* Brand in Mobile Topbar */
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        text-decoration: none;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 19px;
+        letter-spacing: -0.5px;
+    }
+
+    .mobile-brand .brand-currency {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #16b5f4, #168ce8);
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(22, 140, 232, 0.35);
+    }
+
+    .mobile-brand .brand-name span {
+        color: #20b9f5;
+    }
+
+    /* Topbar Right Actions */
+    .mobile-topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mobile-quick-theme-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        font-size: 17px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .mobile-quick-theme-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: scale(1.05);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. SIDEBAR DRAWER & BACKDROP
+   -------------------------------------------------------------------------- */
+.sidebar-close-btn {
+    display: none;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    /* Backdrop overlay */
+    .sidebar-backdrop {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        background: rgba(5, 12, 22, 0.72) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        z-index: 99998 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease !important;
+    }
+
+    .sidebar-backdrop.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* Off-Canvas Sidebar */
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 290px !important;
+        max-width: 86vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        background: #101c2d !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease !important;
+        z-index: 100000 !important;
+        box-shadow: none !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0) !important;
+        box-shadow: 18px 0 60px rgba(0, 0, 0, 0.65) !important;
+    }
+
+    /* Sidebar Header Row */
+    .sidebar-header-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 20px 18px 18px 22px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .sidebar-header-row .logo {
+        padding: 0 !important;
+        border-bottom: none !important;
+        font-size: 22px !important;
+    }
+
+    .sidebar-close-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 9px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: #ffffff !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        cursor: pointer !important;
+        transition: background 0.2s, transform 0.15s !important;
+    }
+
+    .sidebar-close-btn:hover {
+        background: rgba(239, 68, 68, 0.2) !important;
+        color: #fca5a5 !important;
+    }
+
+    .sidebar-close-btn:active {
+        transform: scale(0.92) !important;
+    }
+
+    /* Body lock when sidebar is open */
+    body.mobile-nav-lock {
+        overflow: hidden !important;
+        touch-action: none !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. UNIVERSAL APP LAYOUT & MAIN CONTAINERS ON MOBILE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .app-layout {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+        overflow-x: clip !important;
+    }
+
+    .main-content,
+    .transaction-main,
+    .settings-main,
+    .main,
+    .calendar-main,
+    .page-container {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 20px 16px 45px !important;
+        box-sizing: border-box !important;
+    }
+
+    .transaction-page,
+    .calendar-page {
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Page Header */
+    .page-header,
+    .transaction-header,
+    .settings-header,
+    .topbar,
+    .calendar-header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .page-header h1,
+    .transaction-header h1,
+    .settings-header h1,
+    .topbar h1,
+    .calendar-header h1,
+    .page-title h1 {
+        font-size: 26px !important;
+        line-height: 1.22 !important;
+        letter-spacing: -0.5px !important;
+    }
+
+    .page-header p,
+    .transaction-header p,
+    .settings-title p,
+    .page-title p {
+        font-size: 14px !important;
+    }
+
+    .header-actions,
+    .topbar-actions {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .date-badge,
+    .settings-badge,
+    .month-badge {
+        font-size: 13px !important;
+        padding: 8px 14px !important;
+    }
+
+    .quick-add-btn {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content,
+    .transaction-main,
+    .settings-main,
+    .main {
+        padding: 16px 12px 40px !important;
+    }
+
+    .page-header h1,
+    .transaction-header h1 {
+        font-size: 23px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE STATS & KPI GRIDS
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .stats-grid,
+    .summary-grid,
+    .kpi-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .stat-card,
+    .summary-card,
+    .kpi-card,
+    .transaction-summary-card {
+        padding: 16px !important;
+        min-height: auto !important;
+        border-radius: 14px !important;
+    }
+
+    .stat-value,
+    .summary-value,
+    .kpi-value {
+        font-size: 22px !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+    }
+
+    .stat-title,
+    .summary-label {
+        font-size: 11px !important;
+    }
+
+    .stat-icon,
+    .summary-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 17px !important;
+        border-radius: 10px !important;
+    }
+}
+
+@media (max-width: 520px) {
+    .stats-grid,
+    .summary-grid,
+    .kpi-grid,
+    .transaction-summary {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    .stat-card,
+    .summary-card,
+    .transaction-summary-card {
+        padding: 15px !important;
+    }
+
+    .stat-value,
+    .summary-value {
+        font-size: 24px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE DASHBOARD & CONTENT TWO-COLUMN GRIDS
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .dashboard-grid,
+    .content-grid,
+    .settings-grid,
+    .guide-grid,
+    .accounts-grid,
+    .budgets-grid,
+    .goals-grid,
+    .debts-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    .card,
+    .transaction-card,
+    .settings-card,
+    .account-card,
+    .budget-card,
+    .goal-card,
+    .debt-card,
+    .medical-card {
+        padding: 18px 16px !important;
+        border-radius: 15px !important;
+    }
+
+    .card-header,
+    .transaction-card-title {
+        margin-bottom: 16px !important;
+    }
+
+    .card-header h2 {
+        font-size: 18px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. CHARTS ON MOBILE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .chart-container {
+        height: 240px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .chart {
+        gap: 10px !important;
+        padding: 15px 4px 30px !important;
+        min-width: 320px !important;
+    }
+
+    .bar {
+        width: 14px !important;
+        border-radius: 4px 4px 1px 1px !important;
+    }
+
+    .month-label {
+        font-size: 10px !important;
+        bottom: -24px !important;
+    }
+
+    .chart-legend {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        margin-top: 14px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8. FORMS & INPUT CONTROLS ON MOBILE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .form-grid,
+    .transaction-form-grid,
+    .transaction-filter-grid,
+    .filter-grid,
+    .filter-bar {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .form-group.full,
+    .form-group:first-child,
+    .full {
+        grid-column: auto !important;
+    }
+
+    .form-actions,
+    .filter-actions,
+    .filter-buttons {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+        margin-top: 16px !important;
+    }
+
+    .apply-filter-btn,
+    .clear-filter-link,
+    .btn-primary,
+    .btn-secondary,
+    .btn-submit,
+    .submit-btn {
+        width: 100% !important;
+        min-height: 46px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        font-size: 15px !important;
+        box-sizing: border-box !important;
+    }
+
+    .clear-filter-link {
+        padding: 10px !important;
+        text-align: center !important;
+    }
+
+    .transaction-field input,
+    .transaction-field select,
+    .transaction-filter-field input,
+    .transaction-filter-field select,
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        min-height: 46px !important;
+        padding: 10px 14px !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   9. RESPONSIVE TABLES & MOBILE SWIPE HINT
+   -------------------------------------------------------------------------- */
+.mobile-table-hint {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .mobile-table-hint {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px 12px !important;
+        margin-bottom: 10px !important;
+        border-radius: 8px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        background: #eef8ff;
+        color: #148fdf;
+        border: 1px dashed rgba(20, 143, 223, 0.35);
+        user-select: none;
+    }
+
+    .transaction-table-wrapper,
+    .table-responsive,
+    .table-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-x pan-y !important;
+        border-radius: 12px !important;
+        border: 1px solid #e7ebf1 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .transaction-table,
+    .table {
+        min-width: 680px !important;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 12px 10px !important;
+        font-size: 12px !important;
+    }
+
+    .transaction-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    .transaction-edit,
+    .transaction-delete {
+        padding: 7px 11px !important;
+        min-height: 36px !important;
+        min-width: 36px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   10. FINANCIAL CALENDAR ON MOBILE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .calendar-weekdays {
+        gap: 3px !important;
+    }
+
+    .weekday {
+        font-size: 10px !important;
+        padding: 6px 2px !important;
+    }
+
+    .calendar-grid {
+        gap: 3px !important;
+    }
+
+    .calendar-day {
+        min-height: 65px !important;
+        padding: 4px !important;
+        border-radius: 6px !important;
+    }
+
+    .day-number {
+        font-size: 11px !important;
+    }
+
+    .calendar-event {
+        font-size: 8.5px !important;
+        padding: 2px 4px !important;
+        margin-top: 2px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .calendar-controls {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 52px !important;
+    }
+
+    .day-number {
+        font-size: 10px !important;
+    }
+
+    .calendar-event {
+        font-size: 7.5px !important;
+        padding: 1px 3px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   11. MODALS & POPUPS ON MOBILE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .modal-overlay,
+    .modal-backdrop {
+        padding: 15px !important;
+    }
+
+    .modal,
+    .modal-content,
+    .dialog-box {
+        width: 100% !important;
+        max-width: 480px !important;
+        padding: 22px 18px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+    }
+
+    .modal-header h3 {
+        font-size: 18px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   12. AUTH & ONBOARDING PAGES ON MOBILE
+   (login.php, register.php, forgot_password.php, reset_password.php, verify_otp.php)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    body.auth-body,
+    body:has(.container),
+    body:has(.otp-card) {
+        padding: 16px 12px !important;
+    }
+
+    .container {
+        grid-template-columns: 1fr !important;
+        max-width: 460px !important;
+        min-height: auto !important;
+        border-radius: 22px !important;
+    }
+
+    .container .left {
+        display: none !important;
+    }
+
+    .container .right {
+        padding: 30px 20px !important;
+    }
+
+    .card,
+    .otp-card {
+        padding: 26px 18px !important;
+        border-radius: 20px !important;
+    }
+
+    .otp-card h1 {
+        font-size: 24px !important;
+    }
+
+    .otp-input {
+        letter-spacing: 5px !important;
+        font-size: 22px !important;
+        height: 52px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   13. DARK MODE ADJUSTMENTS FOR MOBILE COMPONENTS
+   -------------------------------------------------------------------------- */
+body.dark-mode .mobile-topbar,
+html.dark-mode .mobile-topbar {
+    background: #090e17 !important;
+    border-bottom: 1px solid #1e2d42 !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .mobile-menu-btn,
+html.dark-mode .mobile-menu-btn {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .mobile-menu-btn:hover,
+html.dark-mode .mobile-menu-btn:hover {
+    background: rgba(56, 189, 248, 0.16) !important;
+}
+
+body.dark-mode .mobile-quick-theme-btn,
+html.dark-mode .mobile-quick-theme-btn {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #1e2d42 !important;
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .mobile-table-hint,
+html.dark-mode .mobile-table-hint {
+    background: rgba(22, 140, 232, 0.12) !important;
+    color: #38bdf8 !important;
+    border-color: rgba(56, 189, 248, 0.25) !important;
+}
+
+body.dark-mode .sidebar,
+html.dark-mode .sidebar {
+    background: #0c1524 !important;
+}
+
+body.dark-mode .sidebar-header-row,
+html.dark-mode .sidebar-header-row {
+    border-bottom-color: #1e2d42 !important;
+}
+
+body.dark-mode .sidebar-close-btn,
+html.dark-mode .sidebar-close-btn {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: #1e2d42 !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .sidebar-close-btn:hover,
+html.dark-mode .sidebar-close-btn:hover {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #fca5a5 !important;
+}
