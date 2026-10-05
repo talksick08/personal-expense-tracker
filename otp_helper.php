@@ -55,15 +55,16 @@ function clear_old_otps(
 
     ensure_otp_table($conn);
 
+    // Clean up only expired or already used OTPs
     $stmt = $conn->prepare("
         DELETE FROM otp_verifications
         WHERE user_id = ?
         AND purpose = ?
-        AND used_at IS NULL
+        AND (used_at IS NOT NULL OR expires_at < NOW())
     ");
 
     if (!$stmt) {
-        throw new Exception("Unable to clear previous OTPs.");
+        return;
     }
 
     $stmt->bind_param(
@@ -183,7 +184,7 @@ function verify_otp(
         AND purpose = ?
         AND used_at IS NULL
         ORDER BY id DESC
-        LIMIT 1
+        LIMIT 5
     ");
 
     if (!$stmt) {
@@ -203,7 +204,10 @@ function verify_otp(
 
     $result = $stmt->get_result();
 
-    $row = $result->fetch_assoc();
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
 
     $stmt->close();
 
@@ -211,7 +215,7 @@ function verify_otp(
     No OTP found
     */
 
-    if (!$row) {
+    if (empty($rows)) {
 
         return [
             "success" => false,
@@ -220,10 +224,10 @@ function verify_otp(
     }
 
     /*
-    Maximum 5 attempts
+    Check attempts on the latest OTP request
     */
 
-    if ((int)$row["attempts"] >= 5) {
+    if ((int)$rows[0]["attempts"] >= 5) {
 
         return [
             "success" => false,
@@ -232,17 +236,30 @@ function verify_otp(
     }
 
     /*
-    Check expiration (timezone-safe comparison using MySQL internal timestamp difference)
+    Match OTP against any valid, unexpired OTP issued for this user & purpose
     */
 
-    $is_expired = false;
-    if (isset($row["seconds_left"]) && $row["seconds_left"] !== null) {
-        $is_expired = ((int)$row["seconds_left"] <= 0);
-    } else {
-        $is_expired = (strtotime($row["expires_at"]) < time());
+    $matched_row = null;
+    $has_unexpired = false;
+
+    foreach ($rows as $row) {
+        $is_expired = false;
+        if (isset($row["seconds_left"]) && $row["seconds_left"] !== null) {
+            $is_expired = ((int)$row["seconds_left"] <= 0);
+        } else {
+            $is_expired = (strtotime($row["expires_at"]) < time());
+        }
+
+        if (!$is_expired) {
+            $has_unexpired = true;
+            if (password_verify($otp, $row["otp_hash"])) {
+                $matched_row = $row;
+                break;
+            }
+        }
     }
 
-    if ($is_expired) {
+    if (!$has_unexpired) {
 
         return [
             "success" => false,
@@ -250,15 +267,10 @@ function verify_otp(
         ];
     }
 
-    /*
-    Check OTP
-    */
+    if (!$matched_row) {
 
-    if (!password_verify(
-        $otp,
-        $row["otp_hash"]
-    )) {
-
+        // Increment attempts on the latest OTP record
+        $latest_id = (int)$rows[0]["id"];
         $update = $conn->prepare("
             UPDATE otp_verifications
             SET attempts = attempts + 1
@@ -266,30 +278,22 @@ function verify_otp(
         ");
 
         if ($update) {
-
-            $otp_id = (int)$row["id"];
-
-            $update->bind_param(
-                "i",
-                $otp_id
-            );
-
+            $update->bind_param("i", $latest_id);
             $update->execute();
-
             $update->close();
         }
 
         return [
             "success" => false,
-            "message" => "Incorrect OTP."
+            "message" => "Incorrect OTP. Please check the code sent to your email."
         ];
     }
 
     /*
-    OTP is correct.
-    Mark it as used.
+    OTP is correct: mark the matched OTP as used and clean up others
     */
 
+    $matched_id = (int)$matched_row["id"];
     $update = $conn->prepare("
         UPDATE otp_verifications
         SET used_at = NOW()
@@ -297,17 +301,22 @@ function verify_otp(
     ");
 
     if ($update) {
-
-        $otp_id = (int)$row["id"];
-
-        $update->bind_param(
-            "i",
-            $otp_id
-        );
-
+        $update->bind_param("i", $matched_id);
         $update->execute();
-
         $update->close();
+    }
+
+    $cleanup = $conn->prepare("
+        DELETE FROM otp_verifications
+        WHERE user_id = ?
+        AND purpose = ?
+        AND id != ?
+    ");
+
+    if ($cleanup) {
+        $cleanup->bind_param("isi", $user_id, $purpose, $matched_id);
+        $cleanup->execute();
+        $cleanup->close();
     }
 
     return [

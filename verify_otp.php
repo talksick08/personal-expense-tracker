@@ -322,21 +322,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 */
 
 if (
+    $_SERVER["REQUEST_METHOD"] === "GET" &&
     isset($_GET["resend"]) &&
     $_GET["resend"] === "1"
 ) {
 
     try {
 
-        /*
-        Generate a completely new OTP.
-        */
+        $expiry = ($otp_purpose === "password_reset") ? 10 : 5;
 
         $otp = create_otp(
             $conn,
             $otp_user_id,
             $otp_purpose,
-            5
+            $expiry
         );
 
         /*
@@ -359,19 +358,19 @@ if (
             if ($sent) {
                 unset($_SESSION["otp_delivery_failed"], $_SESSION["otp_delivery_error"]);
 
-                $message =
+                $_SESSION["otp_flash_message"] =
                     "A new verification code has been sent to your email.";
 
-                $message_type =
+                $_SESSION["otp_flash_type"] =
                     "success";
 
             } else {
                 $_SESSION["otp_delivery_failed"] = true;
 
-                $message =
+                $_SESSION["otp_flash_message"] =
                     "A new code was generated, but the email could not be delivered to your inbox. Please use the code shown below.";
 
-                $message_type =
+                $_SESSION["otp_flash_type"] =
                     "warning";
             }
 
@@ -381,21 +380,30 @@ if (
             SMS is not configured yet.
             */
 
-            $message =
+            $_SESSION["otp_flash_message"] =
                 "SMS OTP delivery is not configured yet.";
 
-            $message_type =
+            $_SESSION["otp_flash_type"] =
                 "error";
         }
 
     } catch (Throwable $e) {
 
-        $message =
+        $_SESSION["otp_flash_message"] =
             "Unable to generate a new OTP.";
 
-        $message_type =
+        $_SESSION["otp_flash_type"] =
             "error";
     }
+
+    header("Location: verify_otp.php");
+    exit;
+}
+
+if (isset($_SESSION["otp_flash_message"])) {
+    $message = $_SESSION["otp_flash_message"];
+    $message_type = $_SESSION["otp_flash_type"] ?? "info";
+    unset($_SESSION["otp_flash_message"], $_SESSION["otp_flash_type"]);
 }
 
 ?>
@@ -812,7 +820,7 @@ if (
 
     <?php endif; ?>
 
-    <form method="POST">
+    <form method="POST" action="verify_otp.php">
 
         <label for="otp">
             Enter 6-digit OTP
